@@ -1,6 +1,10 @@
 # medici
 Self-hosted hub for multimedia streaming and social interaction among friends and family
 
+## Status
+
+Instable. Do not use.
+
 ## Features
 
 - manage multimedia items (videos, images, documents, text) in collections (distinct) and "piles" (arbitrary and hierarchical)
