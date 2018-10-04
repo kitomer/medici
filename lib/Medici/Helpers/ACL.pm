@@ -1,6 +1,6 @@
 package Medici::Helpers::ACL;
 
-$permissions = array(
+my $permissions = {
   "owner_read"   => 256,
   "owner_write"  => 128,
   "owner_delete" => 64,
@@ -10,16 +10,17 @@ $permissions = array(
   "other_read"   => 4,
   "other_write"  => 2,
   "other_delete" => 1
-);
-$groups = array(
+};
+my $groups = {
   "root"          => 1,
   "officer"       => 2,
   "user"          => 4,
   "wheel"         => 8
-);
+};
 
-sub all_object_priviledges {
-
+sub all_object_priviledges
+{
+=pod
   $obj_id      = 2;
   $tbl         = 't_user';
   $user_id     = 2;
@@ -92,11 +93,13 @@ sub all_object_priviledges {
 	or pr.c_role = 'self';
   ";
   echo $query;
-
+=cut
+	return 1;
 }
     
-sub all_actionable_objects {
-
+sub all_actionable_objects
+{
+=pod
   $tbl         = 't_event';
   $user_id     = 2;
   $user_groups = 4;
@@ -168,10 +171,13 @@ sub all_actionable_objects {
 	or pr.c_role = 'self';
   ";
   echo $query;
+=cut
+	return 1;
 }
     
-sub all_acl_entries {
-
+sub all_acl_entries
+{
+=pod
   $obj_id      = 2;
   $tbl         = 't_user';
   $user_id     = 2;
@@ -206,10 +212,13 @@ sub all_acl_entries {
       and pr.c_related_table = '$tbl'
   ";
   echo $query;
+=cut
+	return 1;
 }
     
-sub all-table-privileges {
-
+sub all_table_privileges
+{
+=pod
   $tbl         = 't_event';
   $user_id     = 2;
   $user_groups = 4;
@@ -235,6 +244,8 @@ sub all-table-privileges {
 	  or (pr.c_role = 'group' and (pr.c_who & $user_groups <> 0)))
   ";
   echo $query;
+=cut
+	return 1;
 }
 
 1;

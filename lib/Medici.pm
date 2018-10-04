@@ -21,7 +21,7 @@ sub startup {
   $self->helper(
     sqlite => sub {
       state $sql = Mojo::SQLite->new('sqlite:db/medici.db');
-      $sql->migrations->from_file('/home/tk/Downloads/medici/schema/medici.sql')->migrate;
+      $sql->migrations->from_file('schema/medici.sql')->migrate;
       $sql;
     });
 
