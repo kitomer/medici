@@ -1,0 +1,5 @@
+<b>new user...</b>
+
+<%= b($msg) %>
+
+<%= form_fields "newuser", "name" => { "data" => "bla" } %>

@@ -1,0 +1,12 @@
+[
+   {
+       "label" : "Name",
+       "type" : "text",
+       "name" : "name"
+   },
+   {
+       "label" : "Background",
+       "type" : "text",
+       "name" : "background"
+   }
+]
