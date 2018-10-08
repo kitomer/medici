@@ -16,7 +16,7 @@ Instable. Do not use.
 
     $ git clone https://github.com/kitomer/medici.git
     $ cd medici-master/
-    $ sudo cpan Mojolicious Mojo::SQLite
+    $ sudo cpan Mojolicious Mojo::SQLite Mojolicious::Plugin::FormFieldsFromJSON Mojolicious::Plugin::Authentication
     $ morbo scripts/medici
 
 ## Dependencies
