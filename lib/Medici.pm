@@ -17,6 +17,12 @@ sub startup {
 
   # Load configuration from hash returned by "my_app.conf"
   my $config = $self->plugin('Config');
+  $self->plugin(
+    'FormFieldsFromJSON' => {
+      'dir' => 'fields/',
+      'template' => '<label for="<%= $id %>"><%= $label %>:</label><div><%= $field %></div>',
+    }
+  );
   
   $self->helper(
     sqlite => sub {
@@ -38,6 +44,7 @@ sub startup {
 
   # Normal route to controller
   $r->get('/')->to('example#welcome');
+  $r->get('/user/new')->to('example#newuser');
 }
 
 1;

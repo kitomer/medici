@@ -4,7 +4,8 @@ use Mojo::Base 'Mojolicious::Controller';
 #use Mojolicious::Plugin::Authentication;
 
 # This action will render a template
-sub welcome {
+sub welcome
+{
   my $self = shift;
 
   my $db = $self->sqlite->db;
@@ -13,6 +14,14 @@ sub welcome {
   
   # Render template "example/welcome.html.ep" with message
   #$self->render(msg => 'Welcome to the Mojolicious real-time web framework!');
+}
+
+sub newuser
+{
+  my $self = shift;
+  $self->stash( 'background' => 'test' );
+  $self->render( msg => 'new user: '.
+	  $self->form_fields( 'newuser', 'name' => { 'data' => 'hi' } ) );  
 }
 
 1;
