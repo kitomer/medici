@@ -1,12 +1,12 @@
 [
    {
-       "label" : "Name",
-       "type" : "text",
-       "name" : "name"
+       "label": "Username",
+       "type": "text",
+       "name": "username"
    },
    {
-       "label" : "Background",
-       "type" : "text",
-       "name" : "background"
+       "label": "Password",
+       "type": "password",
+       "name": "password"
    }
 ]

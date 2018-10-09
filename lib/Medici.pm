@@ -60,8 +60,9 @@ sub startup {
   my $r = $self->routes;
 
   # Normal route to controller
-  $r->get('/')->to('example#welcome');
-  $r->get('/user/new')->to('example#newuser');
+  $r->get('/')->to('Example#welcome');
+	
+  $r->any('/login')->to('Auth#login');
 }
 
 1;
