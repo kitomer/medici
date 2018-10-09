@@ -1,0 +1,10 @@
+<h1>Login</h1>
+
+%= $msg
+
+<form action="/login" method="post">
+	<%= b($form) %>
+	<input type="submit" value="Login!"/>
+</form>
+
+<!-- <%= form_fields "newuser", "name" => { "data" => "bla" } %> -->
