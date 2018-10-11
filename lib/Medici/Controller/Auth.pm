@@ -23,7 +23,12 @@ sub login
 		);
 		if( $authenticated ) {
 			$msg = 'Logged in!';
-			$c->redirect_to('/');
+			#$c->session->{'logged_in'} = 'yes';
+			#$c->session->{'profile_uid'} = 42;
+			#$c->session(expiration => 604800);
+			#$c->session('test' => 123);
+			#$c->redirect_to('/');
+			$msg = 'Auth success...'
 		}
 		else {
 			$msg = 'Failed to login. Please try again.';
@@ -37,6 +42,14 @@ sub login
 	#$self->stash( 'background' => 'test' );
   #$self->render( msg => 'new user: '.
 	#  $self->form_fields( 'newuser', 'name' => { 'data' => 'hi' } ) );  
+}
+
+sub logout
+{
+  my( $c ) = shift;
+	#$c->logout();
+	$c->session( expires => 1 );
+	$c->redirect_to('/');
 }
 
 1;
