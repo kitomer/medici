@@ -41,6 +41,9 @@ sub startup {
 
   # Documentation browser under "/perldoc"
   $app->plugin('PODRenderer') if $config->{perldoc};
+	
+	$app->plugin('Medici::Plugin::CrustyCRUD');
+	$app->plugin('Medici::Plugin::PerlyStore');
   
 	#my $sessions = Mojolicious::Sessions->new();
 	#$sessions->cookie_name('medici');
@@ -60,6 +63,8 @@ sub startup {
 			my( $c, $username, $password, $extradata ) = @_;
 			my $db = $app->sqlite->db;
 			my $user = $db->query('SELECT * FROM social_profile WHERE profile_username = ? AND profile_password = ?', $username, $password)->hash();
+
+			$html = $app->crud( -db => $app->db, -table => mytable, -page => 1 );
 
 			#my $salt = substr $password, 0, 2;
       #if ( $c->bcrypt_validate( $password, $res->{user_passwd} ) ) {
