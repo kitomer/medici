@@ -2,6 +2,18 @@ package Medici::Helpers::PerlyStore;
 
 =pod
 
+	- KeyValue::* engines store multiple tables! and each table has specific column names,
+		where the primary key column is specified. all of this meta info stored in JSON, e.g.
+			{ "tables": { "tablename": { "columns": { "key": { "type": "string" }, "value": ... } } }
+	- upsert() -> calls find() and create() or update()
+	- get( $tablename, $key ) as shortcuts to find()
+	- set( $tablename, $key, $value ) as shortcuts to upsert()
+	- rem( $tablename, $key ) as shortcut to remove()
+	- call _has_access() when needed
+	- let _has_access() be passed as an external callback sub
+	- call _generalize() when needed
+	- call connect() in each sub that needs it
+
 	my $st = Medici::Helpers::PerlyStore->new( 'path/to/mydb' );
 	$st->find(...);
 
@@ -28,6 +40,7 @@ sub new
 	$self->{'dir'} = $directory;
 	$self->{'kind'} = ''; # Relational | KeyValue | ...
 	$self->{'engine'} = '';
+	$self->{'handle'} = undef;
 	$self->_determine_engine( $directory );
 	return $self;
 }
@@ -50,489 +63,53 @@ sub _determine_engine
 	die "Could not determine PerlyStore engine (unknown engine '".$engine."')\n";
 }
 
-sub connect_db
+# turns data into generic array-of-hashes
+sub _generalize
 {
-	my $dbfile = $globuls::data_dir.'/db.sq3';
-	`touch '$dbfile'` unless -f $dbfile;
-  $D = DBI->connect( 'dbi:SQLite:dbname='.$dbfile, undef, undef, { AutoCommit => 1, PrintError => 0, RaiseError => 0, sqlite_unicode => 1 } );
-	if( ! defined $D || ! $D ) {
-		die "Error: could not connect to database: ".( defined $DBI::errstr ? $DBI::errstr : '?' )."\n";
-		$D = undef;
-		return 0;
-	}
-	return 1;
-}
-
-sub disconnect_db
-{
-	$D->disconnect() if defined $D;
-	return 1;
-}
-
-sub table_info # get table info, includes fields info
-{
-	my( $self, $tablename ) = @_;
-	my $qu = query( 'PRAGMA table_info('._quotename($tablename).')' );
-	# example result:
-	#	cid      name          type     notnull  dflt_value  pk     
-	#	-------  ------------  -------  -------  ----------  -------
-	#	0        account_id    text     1                    0      
-	#	1        account_name  text     1                    0      	
-	my %columns = (); # <name> => <sqltype>
-	while (my $row = $qu->fetchrow_hashref()) {
-		$columns{ $row->{'name'} } = $row->{'type'};
-	}
-	return ( scalar keys %columns ? \%columns : undef );
-}
-
-sub init_table # create new table
-{
-	my( $self, $tablename, $columns, $rows_to_insert ) = @_;
-	$rows_to_insert = [] unless defined $rows_to_insert;
-
-	#create( -table => 'table', -row => { 'name' => $tablename } );
-	
-=pod
-	# create id column
-	my $created_id_column = 0;
-	for( my $i = 0; $i < scalar @{$columns} - 1; $i += 2 ) {
-		last if $created_id_column;
-		my( $columnname, $columntype ) = ( $columns->[$i], $columns->[$i+1] );
-		next if $columnname ne 'id';
-		create( -table => 'column', -where_tablename => $tablename, 
-						-row => { 'name' => $columnname, 'type' => $columntype } );
-		$created_id_column = 1;
-	}
-	return 0 unless $created_id_column;
-=cut
-
-	# other columns
-	for( my $i = 0; $i < scalar @{$columns} - 1; $i += 2 ) {
-		my( $columnname, $columntype ) = ( $columns->[$i], $columns->[$i+1] );
-		next if $columnname eq 'id';
-		create( -table => 'column', -where_tablename => $tablename, 
-						-row => { 'name' => $columnname, 'type' => $columntype } );
-	}
-	# insert initial data
-	if( defined query( $sql ) ) {
-		map { create( -table => $tablename, -row => $_, -accesscheck => 0 ) } @{$rows_to_insert};
-	}
-
-=pod
-	unless( defined table_info( $tablename ) ) {
-		my @columns;
-		for( my $i = 0; $i < scalar @{$columns}; $i += 2 ) {
-			my $addon = ( $columns->[$i] eq 'id' ? ' PRIMARY KEY' : '' );
-			push @columns, _quotename($columns->[$i]).' '._typename_to_sql($columns->[$i+1]).$addon;
-		}
-		my $sql = 'CREATE TABLE '._quotename($tablename).' ('.join(', ', @columns).')';
-		if( defined query( $sql ) ) {
-			map { create( -table => $tablename, -row => $_, -accesscheck => 0 ) } @{$rows_to_insert};
-		}
-	}
-	return 0;
-=cut
-}
-
-=pod
-sub alter_table # rename/change table
-{
-	my( $tablename, $new_tablename, $fields ) = @_;
-	# on-demand
-	# ...
-	#	if defined table_info(<name>)
-	#		ALTER TABLE t RENAME TO x
-	return 1;
-}
-
-sub drop_table # drop table(s)
-{
-	my( @tablenames ) = @_;
-	# on-demand
-	# ...
-	#	if defined table_info(<name>)
-	#		DROP TABLE <name>;
-	return 1;
-}
-
-sub create_column # create field(s)
-{
-	my( $tablename, $column ) = @_;
-	my %tab = table_info( $tablename );
-	if( scalar keys %tab && ! exists $tab{$column->{'name'}} ) {
-		return defined
-			query( 	'ALTER TABLE '._quotename($tablename).' '.
-							'ADD COLUMN '._quotename($column->{'name'}).' '.
-							_typename_to_sql($column->{'name'}) );
-	}
-	return 0;
-}
-
-sub alter_column # rename/change field
-{
-	my( $tablename, $fieldname, $new_fieldname, $type, $new_type ) = @_;
-	# on-demand
-	# ...
-	#	-> RENAME and CHANGE TYPE is not supported, only DROP
-	#	if defined table_info(<name>) && column exists
-	#		ALTER TABLE <name> DROP COLUMN <column>
-	return 1;
-}
-
-sub drop_column # drop field(s)
-{
-	my( $tablename, @fieldnames ) = @_;
-	# on-demand
-	# ...
-	#	if defined table_info(<name>) && column exists
-	#		ALTER TABLE <name> DROP COLUMN <column>;
-	return 1;
-}
-=cut
-
-sub backup_db # backup db
-{
-	my( $self ) = @_;
-	my $file_basename = '';
-	disconnect_db();
-	#	shell: sqlite3 my_database.sq3 ".backup 'backup_file.sq3'"
-	# ...
-	connect_db();
-	return $file_basename;
-}
-
-sub load_db_backup # load db backup
-{
-	my( $self, $file_basename ) = @_;
-	disconnect_db();
-	#	shell: sqlite3 my_database.sq3 ' .restore [zielDatenbank] dateiBackup.db"
-	# ...
-	connect_db();
-	return 1;
-}
-
-
-sub first
-{
-	my( $self, @args ) = @_;
-	my $qu = _find( @args, -limit => 1 );
-	my $row = $qu->fetchrow_hashref();
-	return $row;
-}
-
-sub find
-{
-	my( $self, %options ) = @_;
-	my $opts = _parse_params( \%options,
-		{
-			'tables' 		=> [],
-			'table'     => '',
-			'where' 		=> {},
-			'wherelike' => {},
-			'group' 		=> [],
-			'order' 		=> [],
-			'limit' 		=> 0,
-			'offset' 		=> 0,
-			'distinct' 	=> 0,
-			'columns'		=> [],
-			'joins'		  => {},
-			'sortdir'		=> 'asc', # 'asc' or 'desc'
-			'resolve'		=> [], # foreign-key column names that should be resolved to their actual values
-			'accesscheck' => 1,
-			'general'   => 0, # generalized result or original
-		});
-	my @tablenames = ( @{$opts->{'tables'}}, ( length $opts->{'table'} ? $opts->{'table'} : () ) );
-	die "no tablename given" unless scalar @tablenames;
-
-	if( $opts->{'table'} eq 'column' ) {
-		return unless has_access( 'w', $opts->{'table'} );
-		
-		my %tables = builtin::tables();
-		my @rows = ();
-		foreach my $tablename ( keys %tables ) {
-			my $table_info = table_info( $tablename );
-			foreach my $columnname ( keys %{$tables{$tablename}} ) {
-				push @rows, { 'table' => $tablename, 'name' => $columnname,
-											'type' => _sqltype_to_typename($tables{$tablename}->{$columnname}) };
+	my( $rows, $tablename ) = @_;
+	my $table_info = ( defined $tablename ? table_info( $tablename ) : {} );
+	my %auto_fields; # <fieldname> => <type> (auto-detected from first occurred value)
+	my @res;
+	foreach my $row ( @{$rows} ) {
+		my @r;
+		foreach my $key ( sort sort_by_fieldname keys %{$row} ) {
+			my %f = ( 'name' => $key, 'value' => $row->{$key}, 
+								'table' => ( defined $tablename ? $tablename : '' ), 'type' => 'txt' );
+			if( defined $table_info && exists $table_info->{$key} ) {
+				$f{'type'} = $table_info->{$key};
 			}
+			elsif( exists $auto_fields{$key} ) {
+				$f{'type'} = $auto_fields{$key};
+			}
+			else {
+				# auto-detect field type
+				my $value = $row->{'key'};
+				if( $value =~ /^\d+\.\d+$/ ) {
+					$auto_fields{$key} = 'real';
+				}
+				elsif( $value =~ /^\d{10,}$/ ) {
+					$auto_fields{$key} = 'ts';
+				}
+				elsif( $value =~ /^(0|1)$/ ) {
+					$auto_fields{$key} = 'bool';
+				}
+				elsif( $value =~ /\0/ ) {
+					$auto_fields{$key} = 'bin';
+				}
+				else { #elsif( length $value > 255 ) {
+					$auto_fields{$key} = 'txt';
+				}
+				# type "str" not detectable since we don't know if upcoming values might be
+				# larger than 255... (maybe better detectiong sometimes...)
+				
+				$f{'type'} = $auto_fields{$key} if exists $auto_fields{$key};
+			}
+			push @r, \%f;
 		}
-		return @rows;
+		push @res, \@r;
 	}
-	
-	my $qu = $self->_find( $opts );
-	my @rows = ();
-	while (my $row = $qu->fetchrow_hashref()) {
-		next if $opts->{'accesscheck'} && ! has_access( 'r', \@tablenames, $row );
-		push @rows, $row;
-	}
-	return ( $opts->{'generalize'} ? generalize( \@rows, $tablenames[0] ) : @rows );
+	return @res;
 }
-
-
-#	- foreign key constraints PER fieldname, e.g.
-#		myfield__othertable or myfield__othertable__otherfield
-#		wenn fieldname = othertablename und otherfield = id dann geht auch: otherfield__
-sub _find
-{
-	my( $self, $opts ) = @_;
-
-	my @tables = map { _quotename($_) } @{$opts->{'tables'}};
-	push @tables, _quotename($opts->{'table'}) if length $opts->{'table'};
-
-	my @columns = map { _quotename($_) } @{$opts->{'columns'}};
-
-	my @joins =
-		map {
-			_quotename($_).' = '._quotename($opts->{'joins'}->{$_});
-		}
-		keys %{$opts->{'joins'}};
-
-	my @group = map { _quotename($_) } @{$opts->{'group'}};
-
-	my @order = map { _quotename($_) } @{$opts->{'order'}};
-	
-	my $sql =
-		'SELECT'
-		.($opts->{'distinct'} == 1 ? ' DISTINCT' : '')
-		.' '.(scalar @columns ? join(', ', @columns) : '*')
-		.' FROM '.join(', ', @tables)
-		.' WHERE '
-		.(scalar keys %{$opts->{'where'}} ?
-			_make_sql_where_clause($opts->{'where'})
-			: '1')
-		.(scalar keys %{$opts->{'wherelike'}} ?
-			' AND '._make_sql_where_clause($opts->{'wherelike'}, 1)
-			: '')
-		.(scalar @joins ? ' AND '.join(' AND ', @joins) : '')
-		.(scalar @group ? ' GROUP BY '.join(', ', @group) : '')
-		.(scalar @order ? ' ORDER BY '.join(', ', @order).' '.uc($opts->{'sortdir'}) : '')
-		.($opts->{'offset'} > 0 ? ' OFFSET '.$opts->{'offset'} : '')
-		.($opts->{'limit'} > 0 ? ' LIMIT '.$opts->{'limit'} : '');
-	
-	return query($sql);
-}
-
-sub create
-{
-	my( $self, %options ) = @_;
-	my $opts = _parse_params( \%options,
-		{
-			'table' => undef,
-			'row' => {},
-			'accesscheck' => 1
-		});
-	
-	return if $opts->{'accesscheck'} && ! has_access( 'w', $opts->{'table'} );
-
-	if( $opts->{'table'} eq 'column' ) {
-		return 0 unless defined $opts->{'row'}->{'table'};
-		return 0 unless defined $opts->{'row'}->{'name'};
-		return 0 unless defined $opts->{'row'}->{'type'};
-		
-		my $tablename = $opts->{'row'}->{'table'};
-		my $columnname = $opts->{'row'}->{'name'};
-		my $columntype = $opts->{'row'}->{'type'};
-		my $table_info = table_info( $tablename );
-		unless( defined $table_info ) {
-			my $sql = 'CREATE TABLE '._quotename($tablename).' ('._quotename('id').' '._typename_to_sql('int').' PRIMARY KEY)';
-			return 0 unless defined query( $sql );
-		}
-		return 0 if $columnname eq 'id'; # implicitly created
-		$table_info = table_info( $tablename );
-		if( defined $table_info && ! exists $table_info->{$columnname} ) {
-			my $sql = 'ALTER TABLE '._quotename($tablename).' ADD COLUMN '._quotename($columnname).' '._typename_to_sql($columntype);
-			return 0 unless defined query( $sql );
-		}
-		return 1;
-	}
-	
-	my @columns;
-	my @values;
-	map {
-		push @columns, _quotename($_);
-		push @values,  _quote($opts->{'row'}->{$_});
-	}
-	keys %{$opts->{'row'}};
-
-	my $sql =
-		  'INSERT'
-			.' INTO '._quotename($opts->{'table'})
-			.' ('.join(', ', @columns).')'
-			.' VALUES ('.join(', ', @values).')';
-
-	unless( defined query($sql) ) {
-		die "failed to create row: ".Dumper($opts);
-	}
-	return $D->last_insert_id(undef, undef, $opts->{'table'}, 'id');
-}
-
-sub update
-{
-	my( $self, %options ) = @_;
-	my $opts = _parse_params( \%options,
-		{
-			'table' => '',
-			'set' => {},
-			'where' => {},
-			'wherelike' => {},
-			'accesscheck' => 1,
-		});
-	
-	if( $opts->{'accesscheck'} ) {
-		if( $opts->{'table'} eq 'column' ) {
-			return unless has_access( 'w', $opts->{'table'} );
-		}
-		# TODO: this is quite elaborate to fetch all matching rows and check their access etc.
-		# maybe there is a faster way...
-		my @rows = find( -table => $opts->{'table'}, -where => $opts->{'where'}, -wherelike => $opts->{'wherelike'} );
-		foreach my $row ( @rows ) {
-			return undef unless has_access( 'w', $opts->{'table'}, $row );
-		}
-	}
-
-	if( $opts->{'table'} eq 'column' ) {
-		# TODO
-		# ...
-		return 1;
-	}
-
-	my @sets =
-		map {
-			_quotename($_).' = '._quote($opts->{'set'}->{$_});
-		}
-		keys %{$opts->{'set'}};
-
-	my $sql =
-		  'UPDATE'
-			.' '._quotename($opts->{'table'})
-			.' SET '.join(', ', @sets)
-			.' WHERE '
-			.(scalar keys %{$opts->{'where'}} ?
-				_make_sql_where_clause($opts->{'where'})
-				: '1')
-			.(scalar keys %{$opts->{'wherelike'}} ?
-				' AND '._make_sql_where_clause($opts->{'wherelike'}, 1)
-				: '');
-
-	return query($sql);
-}
-
-sub remove
-{
-	my( $self, %options ) = @_;
-	my $opts = _parse_params( \%options,
-		{
-			'table' => '',
-			'where' => {},
-			'wherelike' => {},
-			'accesscheck' => 1,
-		});
-
-	if( $opts->{'accesscheck'} ) {
-		if( $opts->{'table'} eq 'column' ) {
-			return unless has_access( 'w', $opts->{'table'} );
-		}
-		# TODO: this is quite elaborate to fetch all matching rows and check their access etc.
-		# maybe there is a faster way...
-		my @rows = find( -table => $opts->{'table'}, -where => $opts->{'where'}, -wherelike => $opts->{'wherelike'} );
-		foreach my $row ( @rows ) {
-			return undef unless has_access( 'w', $opts->{'table'}, $row );
-		}
-	}
-	
-	if( $opts->{'table'} eq 'column' ) {
-		# TODO
-		# ...
-		return 1;
-	}
-
-	my $sql =
-		  'DELETE'
-			.' FROM '._quotename($opts->{'table'})
-			.' WHERE '
-			.(scalar keys %{$opts->{'where'}} ?
-				_make_sql_where_clause($opts->{'where'})
-				: '1')
-			.(scalar keys %{$opts->{'wherelike'}} ?
-				' AND '._make_sql_where_clause($opts->{'wherelike'}, 1)
-				: '');
-
-	return query($sql);
-}
-
-sub load
-{
-	my( $self, %options ) = @_;
-	my $opts = _parse_params( \%options,
-		{
-			'table' => '',
-			'data' => '',
-		});
-	
-	my $records	= _load_data($opts->{'data'});
-	
-	my $inserted = 0;
-	foreach my $record (@{$records})
-	{
-		unless( exists $record->{'id'} ) {
-			die "record does not have an id field, in data\n";
-			return 0;
-		}
-		
-		my $query =
-			_find(
-				-table  => $opts->{'table'},
-				-where  => {'id' => $record->{'id'}},
-				-limit  => 1,
-			);
-			
-		if (my $row = $query->fetchrow_hashref()) {
-			# do nothing
-		}
-		else {
-			# insert
-			create(
-				-table => $opts->{'table'},
-				-row   => $record,
-			);
-			$inserted ++;	
-		}
-	}
-	return (scalar @{$records}, $inserted);
-}
-
-sub query
-{
-	my( $self, $sql, $ignore_errors ) = @_;
-	$ignore_errors = 0 unless defined $ignore_errors;
-
-	#print "-------\n$sql\n";
-
-	my $error = 0;
-	my $sth = $D->prepare($sql);
-	if( ! $sth && ! $ignore_errors ) {
-		die 'the preparation of query ['.$sql.'] failed: '.$DBI::errstr."\n";
-		$error = 1;
-	}
-	my $result = $sth->execute();
-	if( ! $result && ! $ignore_errors ) {
-		die 'the query ['.$sql.'] failed: '.$DBI::errstr."\n";
-		$error = 1;
-	}
-	return ( $error ? undef : $sth );
-}
-
-sub tables
-{
-	my( $self ) = @_;
-	my %tables = ();
-	foreach my $name ( $self->find( -table => 'sqlite_master', -where => { 'type' => 'table' } ) ) {
-		$tables{$name->{'name'}} = table_info( $name->{'name'} );
-	}
-	return %tables;
-}
-
-# ------------------------------------------------------------------------------
 
 sub _load_data
 {
@@ -650,6 +227,268 @@ sub _parse_params
 			if exists $defaults->{$cleankey};
 	}
 	return $values;
+}
+
+# these should be overwritten by the engine subclass
+sub _connect { warn('Failed call: _connect() is not implemented.') }
+sub _disconnect { warn('Failed call: _disconnect() is not implemented.') }
+sub _tables { warn('Failed call: _tables() is not implemented.') }
+sub _table_info { warn('Failed call: _table_info() is not implemented.') }
+sub _find { warn('Failed call: _find() is not implemented.') }
+sub _has_access { warn('Failed call: _has_access() is not implemented.') }
+sub _query { warn('Failed call: _query() is not implemented.') }
+sub _alter_table { warn('Failed call: _alter_table() is not implemented.') }
+sub _drop_tables { warn('Failed call: _drop_tables() is not implemented.') }
+sub _create_column { warn('Failed call: _create_column() is not implemented.') }
+sub _alter_column { warn('Failed call: _alter_column() is not implemented.') }
+sub _drop_column { warn('Failed call: _drop_column() is not implemented.') }
+sub _backup_db { warn('Failed call: _backup_db() is not implemented.') }
+sub _load_db_backup { warn('Failed call: _load_db_backup() is not implemented.') }
+
+########################## actual programmer api follows
+
+sub connect
+{
+	my( $self ) = @_;
+	return $self->_connect();
+}
+
+sub disconnect
+{
+	my( $self ) = @_;
+	return $self->_connect();
+}
+
+sub tables
+{
+	my( $self, @args ) = @_;
+	return $self->_tables( @args );
+}
+
+sub table_info # get table info, includes fields info
+{
+	my( $self, $tablename ) = @_;
+	my $qu = query( 'PRAGMA table_info('._quotename($tablename).')' );
+	# example result:
+	#	cid      name          type     notnull  dflt_value  pk     
+	#	-------  ------------  -------  -------  ----------  -------
+	#	0        account_id    text     1                    0      
+	#	1        account_name  text     1                    0      	
+	my %columns = (); # <name> => <sqltype>
+	while (my $row = $qu->fetchrow_hashref()) {
+		$columns{ $row->{'name'} } = $row->{'type'};
+	}
+	return ( scalar keys %columns ? \%columns : undef );
+}
+
+sub find
+{
+	my( $self, %options ) = @_;
+	my $opts = _parse_params( \%options,
+		{
+			'tables' 		=> [],
+			'table'     => '',
+			'where' 		=> {},
+			'wherelike' => {},
+			'group' 		=> [],
+			'order' 		=> [],
+			'limit' 		=> 0,
+			'offset' 		=> 0,
+			'distinct' 	=> 0,
+			'columns'		=> [],
+			'joins'		  => {},
+			'sortdir'		=> 'asc', # 'asc' or 'desc'
+			'resolve'		=> [], # foreign-key column names that should be resolved to their actual values
+			'accesscheck' => 1,
+			'general'   => 0, # generalized result or original
+		});
+	my @tablenames = ( @{$opts->{'tables'}}, ( length $opts->{'table'} ? $opts->{'table'} : () ) );
+	return $self->_find( %{$opts} );
+}
+
+sub first
+{
+	my( $self, @args ) = @_;
+	my @rows = $self->find( @args, -limit => 1 );
+	return ( scalar @rows ? $rows[0] : undef );
+}
+
+sub create
+{
+	my( $self, %options ) = @_;
+	my $opts = _parse_params( \%options,
+		{
+			'table' => undef,
+			'row' => {},
+			'accesscheck' => 1
+		});
+	return $self->_create( %{$opts} );
+}
+
+sub update
+{
+	my( $self, %options ) = @_;
+	my $opts = _parse_params( \%options,
+		{
+			'table' => '',
+			'set' => {},
+			'where' => {},
+			'wherelike' => {},
+			'accesscheck' => 1,
+		});
+	return $self->_update( %{$opts} );
+}
+
+sub remove
+{
+	my( $self, %options ) = @_;
+	my $opts = _parse_params( \%options,
+		{
+			'table' => '',
+			'where' => {},
+			'wherelike' => {},
+			'accesscheck' => 1,
+		});
+	return $self->_remove( %{$opts} );
+}
+
+sub query
+{
+	my( $self, $sql, $ignore_errors ) = @_;
+	$ignore_errors = 0 unless defined $ignore_errors;
+	return $self->_query( $sql, $ignore_errors );
+}
+
+sub load
+{
+	my( $self, %options ) = @_;
+	my $opts = _parse_params( \%options,
+		{
+			'table' => '',
+			'data' => '',
+		});
+	
+	my $records	= $self->_load_data($opts->{'data'});
+	
+	my $inserted = 0;
+	foreach my $record (@{$records})
+	{
+		unless( exists $record->{'id'} ) {
+			die "record does not have an id field, in data\n";
+			return 0;
+		}
+		
+		my $query =
+			_find(
+				-table  => $opts->{'table'},
+				-where  => {'id' => $record->{'id'}},
+				-limit  => 1,
+			);
+			
+		if (my $row = $query->fetchrow_hashref()) {
+			# do nothing
+		}
+		else {
+			# insert
+			create(
+				-table => $opts->{'table'},
+				-row   => $record,
+			);
+			$inserted ++;	
+		}
+	}
+	return (scalar @{$records}, $inserted);
+}
+
+sub init_table # create new table
+{
+	my( $self, $tablename, $columns, $rows_to_insert ) = @_;
+	$rows_to_insert = [] unless defined $rows_to_insert;
+
+	#create( -table => 'table', -row => { 'name' => $tablename } );
+	
+=pod
+	# create id column
+	my $created_id_column = 0;
+	for( my $i = 0; $i < scalar @{$columns} - 1; $i += 2 ) {
+		last if $created_id_column;
+		my( $columnname, $columntype ) = ( $columns->[$i], $columns->[$i+1] );
+		next if $columnname ne 'id';
+		create( -table => 'column', -where_tablename => $tablename, 
+						-row => { 'name' => $columnname, 'type' => $columntype } );
+		$created_id_column = 1;
+	}
+	return 0 unless $created_id_column;
+=cut
+
+	# other columns
+	for( my $i = 0; $i < scalar @{$columns} - 1; $i += 2 ) {
+		my( $columnname, $columntype ) = ( $columns->[$i], $columns->[$i+1] );
+		next if $columnname eq 'id';
+		create( -table => 'column', -where_tablename => $tablename, 
+						-row => { 'name' => $columnname, 'type' => $columntype } );
+	}
+	# insert initial data
+	if( defined query( $sql ) ) {
+		map { create( -table => $tablename, -row => $_, -accesscheck => 0 ) } @{$rows_to_insert};
+	}
+
+=pod
+	unless( defined table_info( $tablename ) ) {
+		my @columns;
+		for( my $i = 0; $i < scalar @{$columns}; $i += 2 ) {
+			my $addon = ( $columns->[$i] eq 'id' ? ' PRIMARY KEY' : '' );
+			push @columns, _quotename($columns->[$i]).' '._typename_to_sql($columns->[$i+1]).$addon;
+		}
+		my $sql = 'CREATE TABLE '._quotename($tablename).' ('.join(', ', @columns).')';
+		if( defined query( $sql ) ) {
+			map { create( -table => $tablename, -row => $_, -accesscheck => 0 ) } @{$rows_to_insert};
+		}
+	}
+	return 0;
+=cut
+}
+
+sub alter_table # rename/change table
+{
+	my( $self, $tablename, $new_tablename, $fields ) = @_;
+	return $self->_alter_table( $tablename, $new_tablename, $fields );
+}
+
+sub drop_tables # drop table(s)
+{
+	my( $self, @tablenames ) = @_;
+	return $self->_drop_tables( @tablenames );
+}
+
+sub create_column # create field(s)
+{
+	my( $self, $tablename, $column ) = @_;
+	return $self->_create_column( $tablename, $column );
+}
+
+sub alter_column # rename/change field
+{
+	my( $self, $tablename, $fieldname, $new_fieldname, $type, $new_type ) = @_;
+	return $self->_alter_column( $tablename, $fieldname, $new_fieldname, $type, $new_type );
+}
+
+sub drop_column # drop field(s)
+{
+	my( $self, $tablename, @fieldnames ) = @_;
+	return $self->_drop_column( $tablename, @fieldnames );
+}
+
+sub backup_db # backup db
+{
+	my( $self ) = @_;
+	return $self->_backup_db();
+}
+
+sub load_db_backup # load db backup
+{
+	my( $self, $file_basename ) = @_;
+	return $self->_load_db_backup( $file_basename );
 }
 
 1;
