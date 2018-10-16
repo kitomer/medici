@@ -1,5 +1,7 @@
 package Medici::Helpers::PerlyStore;
 
+use Data::Dumper;
+
 =pod
 
 	- KeyValue::* engines store multiple tables! and each table has specific column names,
@@ -50,8 +52,9 @@ sub _determine_engine
 	my( $self, $directory ) = @_;
 	my $engine = $directory;
 	   $engine =~ s/^.*\.([^\.]+)$/$1/;
-	foreach my $kind (qw(Relational KeyValue)) {
-		my $class = 'use Medici::Helpers::PerlyStore::'.$kind.'::'.$engine;
+	foreach my $kind (qw(Relational KeyValue Text Binary)) {
+		my $class = 'Medici::Helpers::PerlyStore::'.$kind.'::'.$engine;
+		print "$class\n";
 		eval 'use '.$class;
 		unless( $@ ) {
 			$self->{'kind'} = $kind;
@@ -63,11 +66,21 @@ sub _determine_engine
 	die "Could not determine PerlyStore engine (unknown engine '".$engine."')\n";
 }
 
+# -1 = $a, then $b
+#  0 = $a same as $b
+#  1 = else ($b, then $a)
+sub _sort_by_fieldname
+{
+	return -1 if $a eq 'id'; # id always first
+	return  1 if $b eq 'id';
+	return $a cmp $b;
+}
+
 # turns data into generic array-of-hashes
 sub _generalize
 {
-	my( $rows, $tablename ) = @_;
-	my $table_info = ( defined $tablename ? table_info( $tablename ) : {} );
+	my( $self, $rows, $tablename ) = @_;
+	my $table_info = ( defined $tablename ? $self->table_info( $tablename ) : {} );
 	my %auto_fields; # <fieldname> => <type> (auto-detected from first occurred value)
 	my @res;
 	foreach my $row ( @{$rows} ) {
@@ -159,35 +172,9 @@ sub _load_data
 	return \@records;
 }
 
-sub _make_sql_where_clause
-{
-	my( $where, $use_like ) = @_;
-	$use_like = 0 unless defined $use_like;
-	
-	my @parts =
-		map {
-			my $f = $_;
-			my $fieldname  = _quotename($f);
-			my $fieldvalue = 'NULL';
-			if( defined $where->{$f} ) {
-				$fieldvalue = ( ref $where->{$f} eq 'ARRAY' ? 
-													'('.join(',', map { _quote($_) } @{$where->{$f}} ).')' :
-													_quote($where->{$f}) );
-			}
-			my $s  = $fieldname;
-			   $s .= ($use_like == 1 ? ' LIKE ' : 
-									(defined $where->{$_} ? ( ref $where->{$_} eq 'ARRAY' ? ' IN ' : ' = ' ) : ' IS '));
-			   $s .= ''.$fieldvalue;
-			$s;
-		}
-		keys %{$where};
-	
-	return join(' AND ', @parts);
-}
-
 sub _quote
 {
-	my( @args ) = @_;
+	my( $self, @args ) = @_;
 	my $quoted = $D->quote( @args );
 	if( ! $quoted ) {
 			die 'quote failed: '.DBI->errstr()."\n";
@@ -199,7 +186,7 @@ sub _quote
 # escapes a DB::Functional field identifier, e.g. "mytable.myfield" or "myfield" etc.
 sub _quotename
 {
-	my( $fieldname ) = @_;
+	my( $self, $fieldname ) = @_;
 	#my $quoted = $D->quote_identifier( $fieldname );
 
 	my @parts = split /\./, $fieldname;
@@ -229,13 +216,59 @@ sub _parse_params
 	return $values;
 }
 
+sub _has_access
+{
+	my( $self, $r_or_w, $tablename, $row_or_id, $authenticate_if_needed ) = @_;
+=pod
+	security:
+		- only sanitized params should be processed serverside (relies on programmers configuration effort)
+		- auth is done through http basic auth
+		- auth-names INCLUDE the groupname, e.g. “admin-kir”
+		- existing groups are hardcoded and form a hierarchy:
+				“admin” > “author” > “user”
+		- everyone can r/w (delete, update) the rows they CREATED
+		- each group can edit specific set of tables (s. access table)
+		- a more powerful group is allowed all its lower groups accesses
+		- every table with a column “owner” is access-controlled in this way
+			-> when someone authenticates, his groupname is extracted and access rights can be determined
+		- the table “access” can ONLY be accessed by “admin” group! (hardcoded special case)
+=cut
+	$row_or_id = 0 unless defined $row_or_id;
+	$authenticate_if_needed = 0 unless defined $authenticate_if_needed;
+	return 1 if ! defined $G;
+	if( ref $tablename eq 'ARRAY' ) {
+		foreach my $name ( @{$tablename} ) {
+			return 0 unless has_access( $r_or_w, $name, $row_or_id, $authenticate_if_needed );
+		}
+		return 1;
+	}
+	else { # single table check
+		my $allowed = 1;
+		my $read = ( defined $R && exists $R->{$G} ? $R->{$G} : [] );
+		my $write = ( defined $W && exists $W->{$G} ? $W->{$G} : [] );
+		my $read_ok = ( scalar grep { $_ eq $tablename } @{$read} );
+		my $write_ok = ( scalar grep { $_ eq $tablename } @{$write} );
+		$allowed = $allowed && ( $r_or_w eq 'r' ? ( $read_ok || $write_ok ) : $write_ok );
+		unless( $allowed ) { # check if owner, then always allowed
+			my( $row ) = 	( ref $row_or_id eq 'HASH' ? ( $row_or_id ) : 
+										( int($row_or_id) > 0 ? find( -table => $tablename, -where => { 'id' => $row_or_id } ) : ( undef ) ) );
+			if( defined $row ) {
+				$allowed = ( exists $row->{'owner'} && defined $U && $row->{'owner'} eq $U );
+			}
+		}
+		if( ! $allowed && $authenticate_if_needed ) {
+			authenticate( 'Restricted access, please login.' );
+		}	
+		return $allowed;
+	}	
+}
+
 # these should be overwritten by the engine subclass
 sub _connect { warn('Failed call: _connect() is not implemented.') }
 sub _disconnect { warn('Failed call: _disconnect() is not implemented.') }
 sub _tables { warn('Failed call: _tables() is not implemented.') }
 sub _table_info { warn('Failed call: _table_info() is not implemented.') }
 sub _find { warn('Failed call: _find() is not implemented.') }
-sub _has_access { warn('Failed call: _has_access() is not implemented.') }
 sub _query { warn('Failed call: _query() is not implemented.') }
 sub _alter_table { warn('Failed call: _alter_table() is not implemented.') }
 sub _drop_tables { warn('Failed call: _drop_tables() is not implemented.') }
@@ -268,7 +301,7 @@ sub tables
 sub table_info # get table info, includes fields info
 {
 	my( $self, $tablename ) = @_;
-	my $qu = query( 'PRAGMA table_info('._quotename($tablename).')' );
+	my $qu = $self->query( 'PRAGMA table_info('.$self->_quotename($tablename).')' );
 	# example result:
 	#	cid      name          type     notnull  dflt_value  pk     
 	#	-------  ------------  -------  -------  ----------  -------
@@ -303,6 +336,9 @@ sub find
 			'general'   => 0, # generalized result or original
 		});
 	my @tablenames = ( @{$opts->{'tables'}}, ( length $opts->{'table'} ? $opts->{'table'} : () ) );
+	die "No tablename given" unless scalar @tablenames;
+	delete $opts->{'table'};
+	$opts->{'tables'} = [ @tablenames ];
 	return $self->_find( %{$opts} );
 }
 

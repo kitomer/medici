@@ -27,12 +27,12 @@ sub startup {
     }
   );
   
-  $app->helper(
-    sqlite => sub {
-      state $sql = Mojo::SQLite->new('sqlite:db/medici.db');
-      $sql->migrations->from_file('schema/medici.sql')->migrate;
-      $sql;
-    });
+  #$app->helper(
+  #  sqlite => sub {
+  #    state $sql = Mojo::SQLite->new('sqlite:db/medici.db');
+  #    $sql->migrations->from_file('schema/medici.sql')->migrate;
+  #    $sql;
+  #  });
 
   $app->helper(
     acl => sub {
@@ -55,16 +55,17 @@ sub startup {
 		autoload_user => 1,
 		load_user => sub {
 			my( $app, $uid ) = @_;
-			my $db = $app->sqlite->db;
+			my $db = $app->db_main;
 			print "load some: ".$uid."\n";
-			return $db->query('SELECT * FROM social_profile WHERE profile_uid = ?', $uid)->hash();
+			return $db->find( -table => 'social_profile', -where => { 'profile_uid' => $uid } );
 		},
 		validate_user => sub {
 			my( $c, $username, $password, $extradata ) = @_;
-			my $db = $app->sqlite->db;
-			my $user = $db->query('SELECT * FROM social_profile WHERE profile_username = ? AND profile_password = ?', $username, $password)->hash();
+			my $db = $app->db_main;
+			my $user = $db->find( -table => 'social_profile', 
+														-where => { 'profile_username' => $username, 'profile_password' => $password } );
 
-			$html = $app->crud( -db => $app->db, -table => mytable, -page => 1 );
+			#my $html = $app->crud( -db => $app->db_main, -table => mytable, -page => 1 );
 
 			#my $salt = substr $password, 0, 2;
       #if ( $c->bcrypt_validate( $password, $res->{user_passwd} ) ) {

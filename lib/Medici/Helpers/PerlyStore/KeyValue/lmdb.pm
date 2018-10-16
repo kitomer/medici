@@ -1,4 +1,4 @@
 package Medici::Helpers::PerlyStore::KeyValue::lmdb;
-use base package Medici::Helpers::PerlyStore;
+use base Medici::Helpers::PerlyStore;
 
 1;
