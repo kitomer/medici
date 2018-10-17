@@ -199,8 +199,18 @@ sub _find
 {
 	my( $self, %opts ) = @_;
 	my @tablenames = $opts{'tables'};
+	#print Dumper($opts{'tables'});
 
-	if( $opts{'tables'}->[0] eq 'column' ) {
+	if( $opts{'tables'}->[0] eq 'table' ) {
+		
+		my %tables = $self->tables();
+		my @rows = ();
+		foreach my $tablename ( keys %tables ) {
+			push @rows, { 'name' => $tablename };
+		}
+		return @rows;
+	}
+	elsif( $opts{'tables'}->[0] eq 'column' ) {
 		return unless $self->_has_access( 'w', $opts{'table'} );
 		
 		my %tables = $self->tables();
@@ -215,9 +225,9 @@ sub _find
 		return @rows;
 	}
 	
-	my $qu = $self->__find( \%opts );
+	my $qu = $self->__find( %opts );
 	my @rows = ();
-	while (my $row = $qu->fetchrow_hashref()) {
+	while( my $row = $qu->fetchrow_hashref() ) {
 		next if $opts{'accesscheck'} && ! $self->_has_access( 'r', \@tablenames, $row );
 		push @rows, $row;
 	}
@@ -231,6 +241,7 @@ sub _find
 sub __find
 {
 	my( $self, %opts ) = @_;
+	#print Dumper(\%opts);
 
 	my @tables = map { $self->_quotename($_) } @{$opts{'tables'}};
 	#push @tables, $self->_quotename($opts{'table'}) if length $opts{'table'};
@@ -436,9 +447,9 @@ sub _query
 	$ignore_errors = 0 unless defined $ignore_errors;
 	$self->connect();
 
-	#print "-------\n$sql\n";
+	print "-------\n$sql\n";
 	#print Dumper($self);
-	print "($ignore_errors)\n";
+	#print "($ignore_errors)\n";
 
 	my $error = 0;
 	my $sth = $self->{'handle'}->prepare($sql);
@@ -446,7 +457,7 @@ sub _query
 		die 'The preparation of query ['.$sql.'] failed: '.$DBI::errstr."\n";
 		$error = 1;
 	}
-	print Dumper($sth);
+	#print Dumper($sth);
 	my $result = $sth->execute();
 	if( ! $result && ! $ignore_errors ) {
 		die 'The query ['.$sql.'] failed: '.$DBI::errstr."\n";

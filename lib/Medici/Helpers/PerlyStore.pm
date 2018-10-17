@@ -54,7 +54,7 @@ sub _determine_engine
 	   $engine =~ s/^.*\.([^\.]+)$/$1/;
 	foreach my $kind (qw(Relational KeyValue Text Binary)) {
 		my $class = 'Medici::Helpers::PerlyStore::'.$kind.'::'.$engine;
-		print "$class\n";
+		#print "$class\n";
 		eval 'use '.$class;
 		unless( $@ ) {
 			$self->{'kind'} = $kind;
@@ -175,7 +175,8 @@ sub _load_data
 sub _quote
 {
 	my( $self, @args ) = @_;
-	my $quoted = $D->quote( @args );
+	$self->connect();
+	my $quoted = $self->{'handle'}->quote( @args );
 	if( ! $quoted ) {
 			die 'quote failed: '.DBI->errstr()."\n";
 			return undef;
@@ -339,6 +340,7 @@ sub find
 	die "No tablename given" unless scalar @tablenames;
 	delete $opts->{'table'};
 	$opts->{'tables'} = [ @tablenames ];
+	#print Dumper($opts);
 	return $self->_find( %{$opts} );
 }
 

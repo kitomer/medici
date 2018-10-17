@@ -21,7 +21,12 @@ sub register
 			$lut->{$dbname} = $db;
 		}
 		#print Dumper($lut);
-		$app->helper( 'db' => sub { ( exists $lut->{$_[0]} ? $lut->{$_[0]} : undef ) } );
+		$app->helper( 
+			'db' => sub { 
+				my( $app, $dbname ) = @_;
+				( defined $dbname && exists $lut->{$dbname} ? $lut->{$dbname} : undef );
+			}
+		);
 		closedir $dh;
 	}
 }

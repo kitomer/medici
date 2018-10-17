@@ -63,13 +63,14 @@ sub crud
 	#while( my $row = $results->hash ) {
 	#	push @rows, $row;
 	#}
+	#print Dumper(\@rows);
 	
 	# render output
 	my $o_title .= $r->( $t->('title'), { 'content' => $v->('-title',ucfirst($table)) } );
 	my $o_tbody = '';
-	for( my $r = 0; $r < scalar @rows; $r++ )
+	for( my $i = 0; $i < scalar @rows; $i++ )
 	{
-		my $row = $rows[$r];
+		my $row = $rows[$i];
 
 		my $o_row = '';
 		my @colnames = ('id', sort grep { $_ ne 'id' } keys %{$row} );
@@ -80,7 +81,7 @@ sub crud
 		# ...
 	}
 	my $o_table = $r->( $t->('table',$t), { 'title' => $o_title, 'body' => $o_tbody } );
-	return $o;
+	return $o_table;
 }
 
 1;

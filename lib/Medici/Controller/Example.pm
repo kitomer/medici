@@ -1,16 +1,19 @@
 package Medici::Controller::Example;
 use Mojo::Base 'Mojolicious::Controller';
 
+use Data::Dumper;
+
 # This action will render a template
 sub welcome
 {
   my( $c ) = @_;
 	my $app = $c->app;
 
+	#print Dumper($app->crud( -db => 'main', -table => 'table' ));
   $c->render(
 		msg => 
 			'Welcome!'.
-			$app->crud( -db => 'main', -table => 'tables' ) );
+			$app->crud( -db => 'main', -table => 'table' ) );
 	
 #	unless( $c->user_exists ) {
 #		$c->flash( message => 'You must log in to view this page' );
