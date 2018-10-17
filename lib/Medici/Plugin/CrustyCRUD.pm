@@ -1,10 +1,12 @@
 package Medici::Plugin::CrustyCRUD;
 use base 'Mojolicious::Plugin';
 
+use Data::Dumper;
+
 sub register
 {
 	my( $self, $app ) = @_;
-	$app->helper( crud => \&crud );
+	$app->helper( crud => sub { return crud( @_ ) } );
 }
 
 # render a list of records from a specific table with a lot of features:
@@ -16,8 +18,8 @@ sub register
 # - the rendering can be controlled by supplying custom templates
 sub crud
 {
-	my( $c, $app, %params ) = @_;
-	return 'No -db given' if ! exists $params{'-db'} || ! ref $params{'-db'};
+	my( $app, %params ) = @_;
+	return 'No -db given' if ! exists $params{'-db'};
 	return 'No -table given' if ! exists $params{'-table'};
 	my $dbname = $params{'-db'};
 	my $table = $params{'-table'};
@@ -54,7 +56,7 @@ sub crud
 
 	my %edit = map { $_ => undef } split /,/, $v->('edit',''); # ids of rows to be shown in edit mode
 	
-	my $db = $app->storage( $dbname );
+	my $db = $app->db( $dbname );
 	my @rows = $db->find( -table => $table );
 	#my $_results = $db->query('SELECT * FROM '.$table.);
 	#my @rows;
