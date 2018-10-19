@@ -11,9 +11,8 @@ sub welcome
 
 	#print Dumper($app->crud( -db => 'main', -table => 'table' ));
   $c->render(
-		msg => 
-			'Welcome!'.
-			$app->crud( -db => 'main', -table => 'table' ) );
+		msg => 'Welcome!',
+		content => $app->crud( -db => 'main', -table => 'table' ) );
 	
 #	unless( $c->user_exists ) {
 #		$c->flash( message => 'You must log in to view this page' );

@@ -7,6 +7,7 @@ sub register
 {
 	my( $self, $app ) = @_;
 	$app->helper( crud => sub { return crud( @_ ) } );
+	push @{$app->renderer->classes}, 'Medici::Plugin::CrustyCRUD';
 }
 
 # render a list of records from a specific table with a lot of features:
@@ -18,7 +19,19 @@ sub register
 # - the rendering can be controlled by supplying custom templates
 sub crud
 {
-	my( $app, %params ) = @_;
+=pod
+
+	- medici: crud( $fixed, $dynamic, $defaults ) prinzipien:
+		-> the 3 sets of parameters control the behaviour:
+				$fixed are ALWAYS used, $dynamic params are tried and if not supplied, $defaults params are used
+		-> internally all known parameters ahave internal defaults as well (which are used as a last resort)
+		-> SOME parameters can only be set fixed (e.g. templates etc.)
+		-> templates fallbacks: mojos std. render fkt. is used (uses either embedded or file templates)
+		-> there is a template-name-fallback in place to have all kinds of templates (from very generic to very specific)
+
+=cut
+	my( $c, %params ) = @_;
+	my $app = $c->app;
 	return 'No -db given' if ! exists $params{'-db'};
 	return 'No -table given' if ! exists $params{'-table'};
 	my $dbname = $params{'-db'};
@@ -29,6 +42,7 @@ sub crud
 		sub {
 			my( $tmplnames, $data ) = @_;
 			foreach my $tmpl ( @{$tmplnames} ) {
+				#print "TRY $tmpl\n";
 				my $s = $c->render_to_string( $tmpl, format => 'html', %{$data} );
 				return $s if defined $s;
 			}
@@ -52,6 +66,7 @@ sub crud
 					pop @p;
 				}
 			}
+			return \@t;
 		};
 
 	my %edit = map { $_ => undef } split /,/, $v->('edit',''); # ids of rows to be shown in edit mode
@@ -66,7 +81,7 @@ sub crud
 	#print Dumper(\@rows);
 	
 	# render output
-	my $o_title .= $r->( $t->('title'), { 'content' => $v->('-title',ucfirst($table)) } );
+	my $o_title .= $r->( $t->('title'), { 'title' => $v->('-title',ucfirst($table)) } );
 	my $o_tbody = '';
 	for( my $i = 0; $i < scalar @rows; $i++ )
 	{
@@ -75,12 +90,13 @@ sub crud
 		my $o_row = '';
 		my @colnames = ('id', sort grep { $_ ne 'id' } keys %{$row} );
 		foreach my $colname ( @colnames )	{
-			$o_row .= $r->( $t->('col',$t,$colname,$row->{'id'}),	{ 'content' => $o_row } );
+			my $o_col = $r->( $t->('col',$table,$colname,$row->{'id'}),	{ 'content' => $row->{$colname} } );
+			$o_row .= $o_col;
 		}
-		$o_tbody .= $r->( $t->('row',$t,$row->{'id'}), { 'content' => $o_row } );
+		$o_tbody .= $r->( $t->('row',$table,$row->{'id'}), { 'content' => $o_row } );
 		# ...
 	}
-	my $o_table = $r->( $t->('table',$t), { 'title' => $o_title, 'body' => $o_tbody } );
+	my $o_table = $r->( $t->('table',$table), { 'title' => $o_title, 'body' => $o_tbody } );
 	return $o_table;
 }
 
@@ -92,9 +108,20 @@ __DATA__
 <h1><%= $title %></h1>
 
 @@ crud/table.html.ep
-<%= $title %>
+<%= b($title) %>
 <form action="" method="">
 	<table>
-		<%= $body %>
+		<%= b($body) %>
 	</table>
 </form>
+
+@@ crud/row.html.ep
+<tr>
+	<%= b($content) %>
+</tr>
+
+@@ crud/col.html.ep
+<td>
+	<%= b($content) %>
+</td>
+
