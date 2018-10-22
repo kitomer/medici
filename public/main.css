@@ -1,0 +1,493 @@
+/*
+  - principle:
+    1 use semantic tags as much as possible
+    2 define values for a short set of well-defined semantic common design properties
+    3 use those values by applying common-named css-classes to the tags directly
+
+  - goals:
+    - never write CSS again, except the tags
+    - only need a very small set of CSS classes that can be memorized
+
+  - example: <div class="...">
+
+*/
+
+:root {
+
+  /* can be used inside custom variables */
+  --color-dark-red: #e7040f;
+  --color-red: #ff4136;
+  --color-light-red: #ff725c;
+  --color-orange: #ff6300;
+  --color-gold: #ffb700;
+  --color-yellow: #ffde37;
+  --color-light-yellow: #fbf1a9;
+  --color-purple: #5e2ca5;
+  --color-light-purple: #a463f2;
+  --color-dark-pink: #d5008f;
+  --color-hot-pink: #ff41b4;
+  --color-pink: #ff80cc;
+  --color-light-pink: #ffa3d7;
+  --color-dark-green: #137752;
+  --color-green: #19a974;
+  --color-light-green: #9eebcf;
+  --color-navy: #001b44;
+  --color-dark-blue: #00449e;
+  --color-blue: #357edd;
+  --color-light-blue: #96ccff;
+  --color-lightest-blue: #cdecff;
+  --color-washed-blue: #f6fffe;
+  --color-washed-green: #e8fdf5;
+  --color-washed-yellow: #fffceb;
+  --color-washed-red: #ffdfdf;
+  
+  /* custom variables */
+  --page-background-color: #fff; /* var(--color-lightest-blue); */
+  --basic-text-size: 12pt;
+  --sf-font-family: Arial, Helvetica, sans-serif;
+  --rm-font-family: var(--sf-font-family); /* Georgia, Times, serif; */
+  --tt-font-family: Monaco, "Courier New", Courier, fixed;
+  --color-combination-1-background: #fff;
+  --color-combination-1-foreground: #333;
+  --color-combination-1-border: #999;
+  --color-combination-1-shadow: #666;
+  --color-combination-2-background: #eee;
+  --color-combination-2-foreground: #333;
+  --color-combination-2-border: #999;
+  --color-combination-2-shadow: #666;
+  --color-combination-3-background: var(--color-washed-blue);
+  --color-combination-3-foreground: var(--color-blue);
+  --color-combination-3-border: var(--color-light-blue);
+  --color-combination-3-shadow: var(--color-lightest-blue);
+  --color-combination-4-background: var(--color-light-yellow);
+  --color-combination-4-foreground: var(--color-light-red);
+  --color-combination-4-border: var(--color-gold);
+  --color-combination-4-shadow: var(--color-light-yellow);
+  --default-block-spacing: 0.5em;
+  --headline-font-family: var(--sf-font-family);
+  --text-font-family: var(--rm-font-family);
+  --default-border-radius: 0.3rem;
+}
+  
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  vertical-align: top;
+  text-align: left;
+}
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+html {
+  font-family: var(--text-font-family);
+  font-size: var(--basic-text-size);
+  font-weight: normal;
+  font-style: normal;
+}
+h1, h2, h3, h4, h5, p, div, label {  /* block level tags */
+  display: block;
+}
+body {
+  background-color: var(--page-background-color);
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+h1, h2, h3, h4, h5 { font-family: var(--headline-font-family); font-weight: bold; text-transform: capitalize; }
+h1 { font-size: 2.2rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.8rem; }
+h4 { font-size: 1.6rem; }
+h5 { font-size: 1.4rem; }
+h6 { font-size: 1.2rem; }
+p { font-family: var(--text-font-family); margin: 0.8em 0; }
+ol, ul {
+  list-style: none;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+form {
+  margin: 1em auto;
+  max-width: 400px;
+  padding: 2emx 1.2em 1em 2em;
+  font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+input[type="text"],
+input[type="date"],
+input[type="datetime"],
+input[type="number"],
+input[type="search"],
+input[type="time"],
+input[type="url"],
+input[type="email"],
+textarea,
+select,
+button {
+  border: 0.1em solid var(--color-combination-1-border);
+  padding: 0.5em 0.6em;
+  outline: none; 
+  width: 100%;
+	box-shadow: inset 0 0.1em 0.2em #ccc;
+}
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="datetime"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="time"]:focus,
+input[type="url"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus,
+button:focus {
+	border: 0.1em solid #33f;
+}
+
+input[type="submit"],
+input[type="button"] {
+  background: #42e;
+  padding: 0.5em 0.6em;
+	border: none;
+  color: #fff;
+}
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  background: #53f;
+  box-shadow: none;
+	cursor: pointer;
+}
+input[type="submit"]:-moz-focus-inner,
+input[type="button"]:-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+/* ... */
+
+.nobr {	white-space: nowrap }
+
+/*
+choose font:
+  .sf = sans serif
+  .rm = roman
+  .tt = teletype
+*/
+.sf { font-family: var(--sf-font-family) }
+.rm { font-family: var(--rm-font-family) }
+.tt { font-family: var(--tt-font-family) }
+
+/*
+choose text size:
+  .tiny
+  .small
+  .normal
+  .large
+  .Large
+  .huge
+  .Huge
+*/
+.tiny   { font-size: 0.7rem }
+.small  { font-size: 0.85rem }
+.normal { font-size: var(--basic-text-size) }
+.large  { font-size: 1.2rem }
+.Large  { font-size: 1.5rem }
+.huge   { font-size: 2.0rem }
+.Huge   { font-size: 2.5rem }
+
+/*
+choose text emphasis:
+  .b (bold)
+  .i (italic)
+  .cap (capitalized)
+  .up (all uppercase)
+  .md (thinner)
+  .ul (underlined)
+  .str (line-through)
+*/
+.bf, b { font-weight: bold }
+.it, i { font-style: italic }
+.cap { text-transform: capitalize } 
+.up { text-transform: uppercase }
+.md { font-weight: 300 }
+.ul { text-decoration: underline }
+.str { text-decoration: line-through }
+
+/*
+choose text alignment:
+  .al (left)
+  .ac (center)
+  .ar (right)
+  .aj (justify)
+*/
+.al { text-align: left }
+.ac { text-align: center }
+.ar { text-align: right }
+.aj { text-align: justify; text-justify: distribute; word-spacing: 1em; }
+
+/*
+choose text/background/border color combination:
+  .c1
+  .c2
+  .c3
+  .c4
+*/
+.c1 {
+  color: var(--color-combination-1-foreground);
+  background-color: var(--color-combination-1-background);
+  border-color: var(--color-combination-1-border);
+}
+.c2 {
+  color: var(--color-combination-2-foreground);
+  background-color: var(--color-combination-2-background);
+  border-color: var(--color-combination-2-border);
+}
+.c3 {
+  color: var(--color-combination-3-foreground);
+  background-color: var(--color-combination-3-background);
+  border-color: var(--color-combination-3-border);
+}
+.c4 {
+  color: var(--color-combination-4-foreground);
+  background-color: var(--color-combination-4-background);
+  border-color: var(--color-combination-4-border);
+}
+
+/*
+choose border width/style
+  - default is no border
+  - color set by combination
+  - border width is always in "em"
+  - border style is always "solid"
+  - border sizes: thin, normal, thick
+*/
+.b0     { border-style: solid; border-width: 0.05em 0.05em 0.05em 0.05em }
+.b1, .b { border-style: solid; border-width: 0.1em 0.1em 0.1em 0.1em }
+.b2     { border-style: solid; border-width: 0.25em 0.25em 0.25em 0.25em }
+
+/*
+choose box shadow:
+  - shadow color is set according to color combination
+  .s1 (light shadow)
+  .s2 (strong shadow)
+*/
+.s1    { box-shadow: 0 0 2em 0 var(--color-combination-1-shadow) }
+.s1.c1 { box-shadow: 0 0 2em 0 var(--color-combination-1-shadow) }
+.s1.c2 { box-shadow: 0 0 2em 0 var(--color-combination-2-shadow) }
+.s1.c3 { box-shadow: 0 0 2em 0 var(--color-combination-3-shadow) }
+.s1.c4 { box-shadow: 0 0 2em 0 var(--color-combination-4-shadow) }
+.s2    { box-shadow: 0 0 1em 0 var(--color-combination-1-shadow) }
+.s2.c1 { box-shadow: 0 0 1em 0 var(--color-combination-1-shadow) }
+.s2.c2 { box-shadow: 0 0 1em 0 var(--color-combination-2-shadow) }
+.s2.c3 { box-shadow: 0 0 1em 0 var(--color-combination-3-shadow) }
+.s2.c4 { box-shadow: 0 0 1em 0 var(--color-combination-4-shadow) }
+
+/*
+choose box/border radius:
+  - border radius is always set to --default-border-radius
+  .br (with radius)
+  .brt (..., border radious only on top side)
+  .brb (..., border radious only on bottom side)
+  .brl (..., border radious only on bottom side)
+  .brr (..., border radious only on bottom side)
+*/
+.br  { border-radius: var(--default-border-radius) }
+.brt { border-radius: var(--default-border-radius) var(--default-border-radius) 0 0 }
+.brr { border-radius: 0 var(--default-border-radius) var(--default-border-radius) 0 }
+.brb { border-radius: 0 0 var(--default-border-radius) var(--default-border-radius) }
+.brl { border-radius: var(--default-border-radius) 0 0 var(--default-border-radius) }
+
+/*
+choose spacing:
+  - padding: either none, normal, large
+  - margin: either none, normal, large
+  - optional disable vertical/horizontal margin      
+*/   
+.p0     { padding: 0 }
+.p01    { padding: 0.2em 0.25em }
+.p1, .p { padding: 0.6em 0.7em }
+.p2     { padding: 1.6em 1.8em }
+
+.m0            { margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; }
+.m1, .mv1, .mv { margin-top: 1em; margin-bottom: 1em; }
+.m2, .mv2      { margin-top: 2em; margin-bottom: 2em; }
+.m1, .mh1, .mh { margin-right: 1.1em; margin-left: 1.1em; }
+.m2, .mh2      { margin-right: 2.2em; margin-left: 2.2em; }
+
+/*
+choose display:
+  - use appropriate tags!
+    -> block-level tags (<div>,<p>,...) are always display:block by default
+       (if a block-level tag is set to .di it becomes inline-block!)
+    -> inline-level tags (<i>,<b>,...) are always display:inline by default
+  .db (block)
+  .di (inline)
+*/
+.dfwrap {
+	overflow: hidden;
+}
+.db { display: block }
+.di { display: inline; vertical-align: middle; }
+.df, .df0, .df1, .df2 {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	padding: 0;
+	margin: 0;
+}
+.df1 {
+	padding: 0.5em;
+	margin: -1em;
+}
+.df2 {
+	padding: 1em;
+	margin: -2em;
+}
+	.df > div, .df0 > div, .df1 > div, .df2 > div {
+		flex-grow: 5;
+		margin: 0;
+	}
+	.df1 > div {
+		margin: 0.5em;
+	}
+	.df2 > div {
+		margin: 1em;
+	}
+h1.di, h2.di, h3.di, h4.di, h5.di, p.di, div.di { /* block level tags */
+  display: inline-block;
+	vertical-align: middle;
+}
+
+/*
+choose size:
+  - always percentages
+  - fixed heights rarely used, so set manually
+  .w100 (100%, default for block)
+  .w10
+  ...
+*/
+.w100 { width: 100% }
+.w95  { width: 95% }
+.w90  { width: 90% }
+.w85  { width: 85% }
+.w80  { width: 80% }
+.w75  { width: 75% }
+.w70  { width: 70% }
+.w65  { width: 65% }
+.w60  { width: 60% }
+.w55  { width: 55% }
+.w50  { width: 50% }
+.w45  { width: 45% }
+.w40  { width: 40% }
+.w35  { width: 35% }
+.w30  { width: 30% }
+.w25  { width: 25% }
+.w20  { width: 20% }
+.w15  { width: 15% }
+.w10  { width: 10% }
+.w5   { width: 5% }
+
+.h100 { height: 100% }
+
+/* a page-filling box */
+.fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+}
+
+/* a page-centered box */
+.dia, .dia1, .dia2 {
+  display: block;
+  position: absolute;
+  top: 15%;
+  min-height: 40%;
+  left: 50%;
+  margin: 0;
+}
+.dia, .dia1 {
+  width: 20em;
+  margin-left: -10em;
+}
+.dia2 {
+  width: 40em;
+  margin-left: -20em;
+}
+
+/* place a box in the top right corner */
+.topright {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+}
+
+/* min size boxes */
+div.box0 {
+  min-width: 5em;
+  flex-grow: 1.5;
+}
+div.box, div.box1 {
+  min-width: 10em;
+  flex-grow: 1.75;
+}
+div.box2 {
+  min-width: 15em;
+  flex-grow: 2;
+}
+div.box3 {
+  min-width: 20em;
+  flex-grow: 2.25;
+}
+div.box4 {
+  min-width: 25em;
+  flex-grow: 2.5;
+}
+div.boxfix {
+  flex-grow: 0;
+}
+
+/*
+choose layout:
+  - set top/left/bottom/right manually
+  floating:
+    .fl (left)
+    .fr (right)
+    .cfl (clear, float left)
+    .cfr (clear, float right)
+  fixed/absolute:
+    .rel (relative)
+    .fix (fixed)
+    .abs (absolute)
+*/
+.fl  { float: left; display: block; }
+.fr  { float: right; display: block; }
+.cfl { clear: both; float: left; display: block; }
+.cfr { clear: both; float: right; display: block; }
+
+.rel { position: relative }
+.fix { position: fixed }
+.abs { position: absolute }
+
