@@ -42,13 +42,13 @@
   --color-washed-red: #ffdfdf;
   
   /* custom variables */
-  --page-background-color: #fff; /* var(--color-lightest-blue); */
+  --page-background-color: #111; #fff; /* var(--color-lightest-blue); */
   --basic-text-size: 12pt;
   --sf-font-family: Arial, Helvetica, sans-serif;
   --rm-font-family: var(--sf-font-family); /* Georgia, Times, serif; */
   --tt-font-family: Monaco, "Courier New", Courier, fixed;
-  --color-combination-1-background: #fff;
-  --color-combination-1-foreground: #333;
+  --color-combination-1-background: #333; #fff;
+  --color-combination-1-foreground: #fff; #333;
   --color-combination-1-border: #999;
   --color-combination-1-shadow: #666;
   --color-combination-2-background: #eee;

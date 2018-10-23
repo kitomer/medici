@@ -1,12 +1,13 @@
 
 body {
 	font-size: 12pt;
-	color: #333;
-	background: #eee;
+	xcolor: #333;
+	xbackground: #eee;
+	color: var(--color-combination-1-foreground);
 }
 
 a {
-	color: #42e;	
+	color: #42e;
 }
 a:hover {
 	text-shadow: 0 0 1pt rgba(68, 34, 238, 0.2);	
@@ -82,9 +83,9 @@ a:hover {
 	left: 0;
 	width: 100%;
 	height: 60pt;
-	border-bottom: solid 2pt #ddd;
-	box-shadow: 0 0 2pt 1pt #ccc;
-	background: #fff;				
+	border-bottom: solid 1pt #333; #ddd;
+	box-shadow: 0 0 2pt 1pt #222; #ccc;
+	background: var(--page-background-color); #fff;				
 	padding: 12pt;
 	z-index: 1;
 }
@@ -103,6 +104,7 @@ a:hover {
 			margin-left: 8pt;
 			height: 16pt;
 			opacity: 0.5;
+			filter: invert(100%);
 		}
 		#menu img:hover {
 			opacity: 0.6;
@@ -119,10 +121,14 @@ a:hover {
 			#findbox {
 				height: 28pt;
 				font-size: 12pt;
+				background: var(--page-background-color);
+				border: 0.1em solid #666;
+				padding: 0.5em 0.6em;
+				box-shadow: inset 0 0.1em 0.2em #222;
 			}
 			#find:hover #findbox,
 			#find:focus #findbox {
-				box-shadow: inset 0 0 2pt 2pt #eee;
+				box-shadow: inset 0 0 1pt 2pt #333; #eee;
 			}
 			#findbutt {
 				width: auto;
@@ -164,7 +170,7 @@ a:hover {
 				bottom: -12pt;
 				left: 0;
 				font-size: 9pt;
-				color: #999;
+				color: var(--color-combination-1-foreground); #999;
 				text-shadow: none;
 			}
 
@@ -178,7 +184,7 @@ a.emph:hover {
 			
 			
 .pill {
-	color: #999;
+	color: var(--color-combination-1-foreground); #999;
 	display: block;
 	position: absolute;
 	bottom: 0pt;
@@ -189,10 +195,10 @@ a.emph:hover {
 	left: 0;
 	height: 100%;
 	width: 200pt;
-	border-top: solid 60pt #eee;
-	background: #eee;				
+	border-top: solid 60pt #333; #eee;
+	background: #222; #eee;				
 	overflow: hidden;
-	color: #999;
+	color: var(--color-combination-1-foreground); #999;
 }
 #left:hover {
 	overflow-y: auto;
@@ -206,17 +212,17 @@ a.emph:hover {
 		position: relative;
 	}
 	#left li a {
-		color: #333;
+		color: var(--color-combination-1-foreground); #333;
 		text-decoration: none;
 		display: block;
 		margin-right: 50pt;
 	}
 	#left li a.cur {
-		color: #000;
+		color: var(--color-combination-1-foreground); #000;
 		font-weight: bold;
 	}
 	#left li a:hover {
-		color: #000;
+		color: var(--color-combination-1-foreground); #000;
 	}
 	#left a.icn {
 		background-position: 0 0;
@@ -254,7 +260,7 @@ a.emph:hover {
 		}
 		#left > ul > li.sep {
 			display: block;
-			border-bottom: solid 1pt #ddd;
+			border-bottom: solid 1pt #333; #ddd;
 			padding-bottom: 12pt;
 			width: 200pt;	
 		}
@@ -299,7 +305,7 @@ a.emph:hover {
 			position: absolute;
 			right: 5pt;
 			top: 5pt;
-			color: rgba(0,0,0,0);
+			color: var(--color-combination-1-foreground); rgba(0,0,0,0);
 			overflow: hidden;
 			width: 17pt;
 			height: 18pt;
@@ -321,7 +327,7 @@ a.emph:hover {
 		.gallery > ul li {
 			background: rgba(0,0,0,0.8);
 			display: inline-block;
-			color: rgba(0,0,0,0);
+			color: var(--color-combination-1-foreground); rgba(0,0,0,0);
 			overflow: hidden;
 			padding: 3pt 5pt;			
 			text-decoration: none;
@@ -340,13 +346,13 @@ a.emph:hover {
 		}
 			.gallery > ul a {
 				text-decoration: none;
-				color: #fff;
+				color: var(--color-combination-1-foreground); #fff;
 			}
 	
 #center {
 	margin-top: 60pt;
 	margin-left: 200pt;
-	background: #fff;
+	background: var(--page-background-color); #fff;
 	padding: 20pt 12pt;
 	z-index: 0;
 }
@@ -362,7 +368,7 @@ a.emph:hover {
 			margin: 15pt 0;
 			font-size: 14pt;
 			font-weight: normal;
-			color: #333;
+			color: var(--color-combination-1-foreground); #333;
 		}
 		#detail #descnav {
 			display: block;
@@ -389,13 +395,13 @@ a.emph:hover {
 			margin: 15pt 0;
 			font-size: 14pt;
 			font-weight: normal;
-			color: #333;
+			color: var(--color-combination-1-foreground); #333;
 		}
 		#detail h4 {
 			margin: 15pt 0 5pt;
 			font-size: 13pt;
 			font-weight: normal;
-			color: #999;
+			color: var(--color-combination-1-foreground); #999;
 		}
 		#detail p {
 			margin: 5pt 0;
@@ -409,10 +415,10 @@ a.emph:hover {
 		#right h2 {
 			margin: 15pt 0;
 			padding-top: 15pt;
-			border-top: solid 1pt #eee;
+			border-top: solid 1pt #666; #eee;
 			font-size: 12pt;
 			font-weight: normal;
-			color: #000;
+			color: var(--color-combination-1-foreground); #000;
 		}
 		#right h2:first-child {
 			padding-top: 0;
@@ -427,7 +433,7 @@ a.emph:hover {
 }
 	.microad a {
 		text-decoration: none;
-		color: #333;
+		color: var(--color-combination-1-foreground); #333;
 	}
 	.microad > a {
 		display: block;
@@ -446,7 +452,7 @@ a.emph:hover {
 			bottom: 3pt;
 			right: 3pt;
 			padding: 1pt 5pt 1.2pt;
-			color: #fff;
+			color: var(--color-combination-1-foreground); #fff;
 			font-size: 10pt;
 			border-radius: 2pt;
 		}
@@ -463,7 +469,7 @@ a.emph:hover {
 		float: right;
 		font-size: 10pt;
 		padding: 0;
-		color: #999;
+		color: var(--color-combination-1-foreground); #999;
 		margin: 5pt 0;
 	}
 
@@ -500,7 +506,7 @@ a.emph:hover {
 			bottom: 3pt;
 			right: 3pt;
 			padding: 1pt 5pt 1.2pt;
-			color: #fff;
+			color: var(--color-combination-1-foreground); #fff;
 			font-size: 10pt;
 			border-radius: 2pt;
 		}
@@ -512,7 +518,7 @@ a.emph:hover {
 	.shortad > p {
 		font-size: 10pt;
 		padding: 0;
-		color: #999;
+		color: var(--color-combination-1-foreground); #999;
 	}
 
 
