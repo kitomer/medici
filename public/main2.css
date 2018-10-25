@@ -84,8 +84,8 @@ a:hover {
 	left: 0;
 	width: 100%;
 	height: 60pt;
-	border-bottom: solid 1pt #442238; #ddd;
-	box-shadow: 0 0 10pt 1pt #333; #ccc;
+	border-bottom: solid 1pt #5f5f87; #ddd;
+	box-shadow: 0 0 10pt 1pt #101; #ccc;
 	background: var(--page-background-color); #fff;				
 	padding: 12pt;
 	z-index: 1;
@@ -200,9 +200,11 @@ a.emph:hover {
 	height: 100%;
 	width: 200pt;
 	border-top: solid 60pt #333; #eee;
-	background: #11090e; #eee;				
+	background: var(--page-background-color); #eee;		
+	xborder-right: solid 1pt #4a4a68;
 	overflow: hidden;
 	color: var(--color-combination-1-foreground); #999;
+	xbox-shadow: 0 0.1em 1.5em #11090e;
 }
 #left:hover {
 	overflow-y: auto;
@@ -264,7 +266,7 @@ a.emph:hover {
 		}
 		#left > ul > li.sep {
 			display: block;
-			border-bottom: solid 1pt #333; #ddd;
+			border-bottom: solid 1pt #22111c; #15151e; #ddd;
 			padding-bottom: 12pt;
 			width: 200pt;	
 		}
