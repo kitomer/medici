@@ -7,11 +7,11 @@ body {
 }
 
 a {
-	color: #5f5f87;
+	color: #5865b3;
 }
 a:hover {
-	color: #d98c9e;
-	text-shadow: 0 0 1pt rgba(68, 34, 238, 0.2);	
+	color: #737fbf;
+	xtext-shadow: 0 0 1pt rgba(68, 34, 238, 0.2);	
 }
 
 /*
@@ -84,9 +84,9 @@ a:hover {
 	left: 0;
 	width: 100%;
 	height: 60pt;
-	border-bottom: solid 1pt #5f5f87; #ddd;
-	box-shadow: 0 0 10pt 1pt #101; #ccc;
-	background: var(--page-background-color); #fff;				
+	border-bottom: solid 2pt var(--page-background-color); #ddd;
+	background: #353058; #fff;	
+	box-shadow: 0 0 1.5em rgba(0,0,0,0.2); #ccc;
 	padding: 12pt;
 	z-index: 1;
 }
@@ -122,26 +122,28 @@ a:hover {
 			#findbox {
 				height: 28pt;
 				font-size: 12pt;
-				background: var(--page-background-color);
-				border: 0.1em solid #666;
+				background: #302a4c;
+				xborder: 0.1em solid #666;
+				border: none;
 				padding: 0.5em 0.6em;
-				box-shadow: inset 0 0.1em 0.2em #222;
+				box-shadow: inset 0 0.1em 0 #222;
 			}
 			#find:hover #findbox,
 			#find:focus #findbox {
-				box-shadow: inset 0 0 1pt 2pt #333; #eee;
+				xbox-shadow: inset 0 0 1pt 2pt #333; #eee;
 			}
 			#findbutt {
 				width: auto;
 				text-align: center;
 				font-weight: bold;
-				top: 1px;
-				right: 0;
-				margin: 4pt;
-				padding: 2pt;
+				xtop: 1px;
+				right: -4em;
+				margin: 0;
+				padding: 4pt;
 				font-size: 12pt;
 				xopacity: 0.7;
-				background-color: #b04553;
+				background-color: transparent;
+				border: solid 0.2em #4f5a98;
 				color: #eee;
 			}
 			#find:hover #findbutt,
@@ -174,15 +176,15 @@ a:hover {
 				bottom: -12pt;
 				left: 0;
 				font-size: 9pt;
-				color: var(--color-combination-1-foreground); #999;
+				xcolor: var(--color-combination-1-foreground); #999;
 				text-shadow: none;
 			}
 
 a.emph {
-	color: #b04553 !important;
+	color: var(--color-combination-3-foreground) !important;
 }
 a.emph:hover {
-	color: #d98c9e !important;
+	color: var(--color-combination-3-foreground) !important;
 	text-shadow: 0 0 1pt rgba(255,50,50,0.2) !important;
 }
 			
@@ -200,7 +202,7 @@ a.emph:hover {
 	height: 100%;
 	width: 200pt;
 	border-top: solid 60pt #333; #eee;
-	background: var(--page-background-color); #eee;		
+	background: #2c2b4a; #eee;		
 	xborder-right: solid 1pt #4a4a68;
 	overflow: hidden;
 	color: var(--color-combination-1-foreground); #999;
@@ -218,17 +220,18 @@ a.emph:hover {
 		position: relative;
 	}
 	#left li a {
-		color: var(--color-combination-1-foreground); #333;
+		xcolor: var(--color-combination-1-foreground); #333;
 		text-decoration: none;
 		display: block;
 		margin-right: 50pt;
 	}
 	#left li a.cur {
-		color: var(--color-combination-1-foreground); #000;
+		color: var(--color-combination-3-foreground); #000;
+		text-shadow: 0 0 3pt rgba(0,0,0,0.5);
 		font-weight: bold;
 	}
 	#left li a:hover {
-		color: var(--color-combination-1-foreground); #000;
+		xcolor: var(--color-combination-3-foreground); #000;
 	}
 	#left a.icn {
 		background-position: 0 0;
@@ -266,7 +269,7 @@ a.emph:hover {
 		}
 		#left > ul > li.sep {
 			display: block;
-			border-bottom: solid 1pt #22111c; #15151e; #ddd;
+			border-bottom: solid 2pt var(--page-background-color); #15151e; #ddd;
 			padding-bottom: 12pt;
 			width: 200pt;	
 		}
@@ -300,6 +303,7 @@ a.emph:hover {
 
 .gallery {
 	position: relative;
+	box-shadow: 0 0 1.5em #000;
 }
 	.gallery > div {
 		position: relative;
@@ -361,6 +365,7 @@ a.emph:hover {
 	background: var(--page-background-color); #fff;
 	padding: 20pt 12pt;
 	z-index: 0;
+	box-shadow: inset 0 0 1.5em #111; #ccc;
 }
 	#detail {
 		margin-right: 20pt;
@@ -446,6 +451,7 @@ a.emph:hover {
 		position: relative;
 		width: 30%;
 		float: left;
+		box-shadow: 0 0 1em #000;
 	}
 		.microad > a > img {
 			display: block;

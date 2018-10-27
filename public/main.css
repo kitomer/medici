@@ -42,25 +42,25 @@
   --color-washed-red: #ffdfdf;
   
   /* custom variables */
-  --page-background-color: #11090e; #fff; /* var(--color-lightest-blue); */
+  --page-background-color: #222439; #fff; /* var(--color-lightest-blue); */
   --basic-text-size: 12pt;
   --sf-font-family: Arial, Helvetica, sans-serif;
   --rm-font-family: var(--sf-font-family); /* Georgia, Times, serif; */
   --tt-font-family: Monaco, "Courier New", Courier, fixed;
   --color-combination-1-background: #1c0e17; #fff;
-  --color-combination-1-foreground: #eef6f4; #333;
+  --color-combination-1-foreground: #eee;  #333;
   --color-combination-1-border: #999;
   --color-combination-1-shadow: #666;
   --color-combination-2-background: #eee;
-  --color-combination-2-foreground: #333;
+  --color-combination-2-foreground: #b28d23;
   --color-combination-2-border: #999;
   --color-combination-2-shadow: #666;
   --color-combination-3-background: var(--color-washed-blue);
-  --color-combination-3-foreground: var(--color-blue);
+  --color-combination-3-foreground: #3fa828;
   --color-combination-3-border: var(--color-light-blue);
   --color-combination-3-shadow: var(--color-lightest-blue);
   --color-combination-4-background: var(--color-light-yellow);
-  --color-combination-4-foreground: var(--color-light-red);
+  --color-combination-4-foreground: #9915c0; #187ebc;
   --color-combination-4-border: var(--color-gold);
   --color-combination-4-shadow: var(--color-light-yellow);
   --default-block-spacing: 0.5em;
@@ -467,6 +467,10 @@ div.box4 {
 }
 div.boxfix {
   flex-grow: 0;
+}
+
+.overflow {
+	overflow: visible;
 }
 
 /*
