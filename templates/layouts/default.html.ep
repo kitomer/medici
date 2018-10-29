@@ -17,10 +17,10 @@
 				Private - Small Businesses			
 			</p>-->
 			<ul>
-				<li><a href="#" class="cur icn icn-home">Start</a></li>
-				<li><a href="#" class="icn icn-favorite">Trending</a></li>
-				<li class="sep"><a href="#" class="icn icn-grade">New</a></li>
-				<li class="sep"><a href="#" class="icn icn-face">My Shortlist</a></li>
+				<li><a href="#" class="cur icn"><i class="material-icons">home</i> Start</a></li>
+				<li><a href="#" class="icn"><i class="material-icons">favorite</i> Trending</a></li>
+				<li class="sep"><a href="#" class="icn"><i class="material-icons">grade</i> New</a></li>
+				<li class="sep"><a href="#" class="icn"><i class="material-icons">face</i> My Shortlist</a></li>
 				<!--
 				<li class="sep"><a href="#" class="icn icn-room">Near</a>
 					<ul>
@@ -30,7 +30,7 @@
 					</ul>
 				</li>
 				-->
-				<li class="sep"><a href="#" class="icn icn-assessment">Top Categories</a>
+				<li class="sep"><a href="#" class="icn"><i class="material-icons">assessment</i> Top Categories</a>
 					<ul>
 						<li><a href="#">Events</a></li>
 						<li><a href="#">Vacation</a></li>

@@ -237,28 +237,15 @@ a.emph:hover {
 		background-position: 0 0;
 		background-size: 16pt 16pt;
 		background-repeat: no-repeat;
-		padding-left: 24pt;
+		xpadding-left: 24pt;
 		padding-top: 2pt;
 		display: block;
 	}
-	#left a.icn.icn-home {
-		background-image: url(icons/ic_home_black_48dp.png);
-	}
-	#left a.icn.icn-grade {
-		background-image: url(icons/ic_grade_black_48dp.png);
-	}
-	#left a.icn.icn-favorite {
-		background-image: url(icons/ic_favorite_black_48dp.png);
-	}
-	#left a.icn.icn-room {
-		background-image: url(icons/ic_room_black_48dp.png);
-	}
-	#left a.icn.icn-assessment {
-		background-image: url(icons/ic_assessment_black_48dp.png);
-	}
-	#left a.icn.icn-face {
-		background-image: url(icons/ic_face_unlock_black_48dp.png);
-	}
+		#left a.icn > i {
+			margin-top: -3pt;
+			display: inline-block;
+			width: 1.2em;
+		}
 	#left a.emph {
 		font-style: italic;
 	}
