@@ -20,7 +20,7 @@
 				<li><a href="#" class="cur icn"><i class="material-icons">home</i> Start</a></li>
 				<li><a href="#" class="icn"><i class="material-icons">favorite</i> Trending</a></li>
 				<li class="sep"><a href="#" class="icn"><i class="material-icons">grade</i> New</a></li>
-				<li class="sep"><a href="#" class="icn"><i class="material-icons">face</i> My Shortlist</a></li>
+				<li class="sep"><a href="#" class="icn"><i class="material-icons">face</i> Favorites</a></li>
 				<!--
 				<li class="sep"><a href="#" class="icn icn-room">Near</a>
 					<ul>
@@ -57,7 +57,7 @@
 		<div class="fix" id="top">
 			
 			<div class="abs" id="logo">
-				<a href="/"><img src="medici-logo-s.png" alt="home"></a>
+				<a href="/"><img src="logos.png" alt="home"></a>
 			</div>
 			<div class="dfwrap">
 				<div class="df">
