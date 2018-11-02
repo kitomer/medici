@@ -34,23 +34,38 @@ Though in order to self-host medici you need some Linux software installation an
 - SQLite
 - Mojolicious Perl web framework with the extensions Mojo::SQLite
 
-## Shortterm roadmap
+## Roadmap
 
-- Implement functionality to manage media collections, items and piles
-- Implement background downloads of media using youtube-dl.
-- Implement functionality to manage social communities, profiles and groups.
-- Implement streaming of media items using HTML5 with MPEG-DASH and HLS.
-- Refine user interface to improve the user experience.
-- Provide a hosted demo installation
-- Create a website where medici is actually used to manage a real community.
-- Have a first release candidate and release (1.0).
+The next release is 1.0 with no specific due date. 
 
-## Longterm roadmap
+*Estimated delivery of 1.0 is the 1st of April 2019.*
 
-- Provide a bookmarklet (at least for Firefox, Chrome and iOS browser) for adding urls to the background downloader.
-- Wrap the medici user interface in a small native mobile application (probably for desktop, too).
-- Be installable from the CentOS package manager.
-- Support other Linux distributions and their package managers.
-- Provide complete OS images (maybe even container formats like Docker) with pre-installed medici.
-- Provide hosted installations of medici.
-- Have a testsuite that is run before every release.
+## Organization
+
+### Versioning
+
+Every release version has a major and minor version number.
+After version 1.0 there will be four releases scheduled each year (1.1., 1.4., 1.7., 1.10.)
+each incrementing the major and/or minor version number.
+
+The size of the version step
+indicates the size of the changes: Major version number increment indicates a bunch of
+new features or big refactorings whereas minor version number increment indicates small
+bug fixes and changes.
+
+### People
+
+- maintainers: kitomer
+
+### Task planning
+
+The things to be done are noted inside the TASKS.md file by the module maintainers.
+Any ideas, bugs or other topic discussions are done using the GitHub issues ui.
+
+## Ways to contribute
+
+- donate some money to make time for development
+- create some GitHub issues, e.g. bug reports, feature ideas etc.
+- grab a task from the task list in TASKS.md by adding yourself to it (using a pull request)
+
+
