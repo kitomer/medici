@@ -36,9 +36,10 @@ Though in order to self-host medici you need some Linux software installation an
 
 ## Roadmap
 
-The next release is 1.0 with no specific due date. 
+Work on the tasks for 1.0 release is currently beeing done. The *estimated* delivery of 1.0
+is the 1st of April 2019. See TASKS.md for a list of concrete work items.
 
-*Estimated delivery of 1.0 is the 1st of April 2019.*
+After that the low priority tasks (s. TASKS.md) are started.
 
 ## Organization
 
