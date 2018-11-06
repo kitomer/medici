@@ -104,11 +104,11 @@ a:hover {
 			margin-top: 7.5pt;
 			margin-left: 8pt;
 			height: 16pt;
-			opacity: 0.5;
+			xopacity: 0.5;
 			filter: invert(100%);
 		}
 		#menu img:hover {
-			opacity: 0.6;
+			xopacity: 0.6;
 		}
 	#find {
 		
@@ -272,7 +272,7 @@ a.emph:hover {
 	#left p {
 		font-size: 10pt;
 		padding: 12pt;
-		opacity: 0.6;
+		xopacity: 0.6;
 	}
 	/*
 	#left p:first-child {
@@ -353,6 +353,7 @@ a.emph:hover {
 	padding: 20pt 12pt;
 	z-index: 0;
 	box-shadow: inset 0 0 1.5em #111; #ccc;
+	xtransition: margin-left 0.5s;
 }
 	#detail {
 		margin-right: 20pt;

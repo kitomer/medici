@@ -10,6 +10,9 @@ can be found in the tasks directory in dedicated files for ecah task
 
 #### Mockup design work
 
+- clientside AJAX logic and URLs strategy for searches, top detail and related list
+	... tbd
+
 - Insert foldable area below detail (video/image play area), bg is a bit brighter
 
 - Pagination mockup
@@ -77,7 +80,7 @@ can be found in the tasks directory in dedicated files for ecah task
 				*media				= only media tables
 				*collection		= only collections
 				*<more>				= filter other things (e.g. profiles etc.)
-			--- default sorting is by relevance (a suitable cut-off threshold is chosen automatically)
+			  ~~~~ default sorting is by relevance (a suitable cut-off threshold is chosen automatically)
 				:newest				= newer stuff is becoming more relevant
 				:popular			= popular stuff is becoming more relevant
 				:new   				= newer stuff is becoming more relevant
@@ -91,10 +94,14 @@ can be found in the tasks directory in dedicated files for ecah task
 				:topcat				= most popular piles
 					-> sidenav "Top Categories" aber nur die Namen der Piles
 					-> shortcut for *pile #popular
-
+				:related      = if a .uid field filter is present, related records to those are included
+												(regardless of other query parts)
 				???
 				/sort=field		= sort by given field
 				/only=table		= limit the searched "things", e.g. "media", "collection" etc.
+		- query syntax info
+			https://bynd.com/news-ideas/google-advanced-search-comprehensive-list-google-search-operators
+			https://www.google.com/advanced_search
 
 - Startpage controller setup paths -> gehen alle auf LaPage::oui()
 		paths to crud lists/newforms/edits of each of the managed items:

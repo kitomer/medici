@@ -81,6 +81,7 @@
   font-style: inherit;
   vertical-align: top;
   text-align: left;
+	transition: all 0.1s;
 }
 *, *:before, *:after {
   box-sizing: border-box;
