@@ -196,7 +196,7 @@ a.emph:hover {
 	bottom: 0pt;
 	right: 10pt;
 }
-#left {
+#popout {
 	top: 0;
 	left: 0;
 	height: 100%;
@@ -207,33 +207,34 @@ a.emph:hover {
 	overflow: hidden;
 	color: var(--color-combination-1-foreground); #999;
 	xbox-shadow: 0 0.1em 1.5em #11090e;
+	box-shadow: 0 0 1.5em #111;
 }
-#left:hover {
+#popout:hover {
 	overflow-y: auto;
 }
-	#left ul,
-	#left li {
+	#popout ul,
+	#popout li {
 		list-style-type: none;
 	}
-	#left li {
+	#popout li {
 		padding: 12pt 12pt 0;
 		position: relative;
 	}
-	#left li a {
+	#popout li a {
 		xcolor: var(--color-combination-1-foreground); #333;
 		text-decoration: none;
 		display: block;
 		margin-right: 50pt;
 	}
-	#left li a.cur {
+	#popout li a.cur {
 		color: var(--color-combination-3-foreground); #000;
 		text-shadow: 0 0 3pt rgba(0,0,0,0.5);
 		font-weight: bold;
 	}
-	#left li a:hover {
+	#popout li a:hover {
 		xcolor: var(--color-combination-3-foreground); #000;
 	}
-	#left a.icn {
+	#popout a.icn {
 		background-position: 0 0;
 		background-size: 16pt 16pt;
 		background-repeat: no-repeat;
@@ -241,41 +242,41 @@ a.emph:hover {
 		padding-top: 2pt;
 		display: block;
 	}
-		#left a.icn > i {
+		#popout a.icn > i {
 			margin-top: -3pt;
 			display: inline-block;
 			width: 1.2em;
 		}
-	#left a.emph {
+	#popout a.emph {
 		font-style: italic;
 	}
-	#left > ul {
+	#popout > ul {
 	}
-		#left > ul > li {
+		#popout > ul > li {
 			width: 180pt;
 		}
-		#left > ul > li.sep {
+		#popout > ul > li.sep {
 			display: block;
 			border-bottom: solid 2pt var(--page-background-color); #15151e; #ddd;
 			padding-bottom: 12pt;
 			width: 200pt;	
 		}
-			#left > ul > li > ul {
+			#popout > ul > li > ul {
 				font-size: 80%;
 				margin-left: 16pt;
 			}
-				#left > ul > li > ul > li {
+				#popout > ul > li > ul > li {
 					padding: 8pt 8pt 0;				
 				}
-					#left > ul > li > ul > li > a {
+					#popout > ul > li > ul > li > a {
 					}
-	#left p {
+	#popout p {
 		font-size: 10pt;
 		padding: 12pt;
 		xopacity: 0.6;
 	}
 	/*
-	#left p:first-child {
+	#popout p:first-child {
 		padding-bottom: 0;
 		padding-left: 12pt;
 		color: #fff;
@@ -352,59 +353,65 @@ a.emph:hover {
 	background: var(--page-background-color); #fff;
 	padding: 20pt 12pt;
 	z-index: 0;
-	box-shadow: inset 0 0 1.5em #111; #ccc;
+	xbox-shadow: inset 0 0 1.5em #111; #ccc;
 	xtransition: margin-left 0.5s;
 }
-	#detail {
+	#left {
 		margin-right: 20pt;
 		float: left;
 	}
-		#detail .gallery {
+		#left .gallery {
 			
 		}
 	
-		#detail h2 {
+		#left h2 {
 			margin: 15pt 0;
 			font-size: 14pt;
 			font-weight: normal;
 			color: var(--color-combination-1-foreground); #333;
 		}
-		#detail #descnav {
+		#left #descnav {
 			display: block;
 			text-align: right;
 		}
-			#detail #descnav li {
+			#left #descnav li {
 				display: inline-block;
 				margin: 0 10pt 10pt;
 				font-size: 12pt;
 			}
-				#detail #descnav li a {
+				#left #descnav li a {
 					text-decoration: none;
 					color: #42e;
 				}
-				#detail #descnav li a:hover {
+				#left #descnav li a:hover {
 					color: #20c;
 				}
-		#detail #desc {
+		#left #desc {
 			padding: 15pt 0;
 			border-top: solid 1pt #eee;			
 			border-bottom: solid 1pt #eee;			
 		}
-		#detail h3 {
+		#left > h3 {
 			margin: 15pt 0;
 			font-size: 14pt;
 			font-weight: normal;
 			color: var(--color-combination-1-foreground); #333;
 		}
-		#detail h4 {
+		#left > h4 {
 			margin: 15pt 0 5pt;
 			font-size: 13pt;
 			font-weight: normal;
 			color: var(--color-combination-1-foreground); #999;
 		}
-		#detail p {
+		#left > p {
 			margin: 5pt 0;
 		}
+		
+		
+			#results {
+				position: absolute;
+				margin-right: 320pt;
+			}
 	
 	#right {
 		width: 300pt;
@@ -477,11 +484,11 @@ a.emph:hover {
 	justify-content: flex-start !important;
 }
 .shortad {
-	padding-right: 4pt;
+	padding-right: 10pt;
 	padding-bottom: 10pt;
 	min-width: 80pt;
 	max-width: 160pt;
-	flex-grow: 1 !important;
+	flex-grow: 3 !important;
 	flex-basis: auto;
 }
 .shortad:last-child {

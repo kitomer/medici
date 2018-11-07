@@ -7,9 +7,9 @@
     <script type="text/javascript" src="main.js"></script>
     <title><%= title %></title>
   </head>
-  <body onload="toggleMenu();showCenter(2);">
+  <body onload="toggleMenu();">
 
-		<div class="fix" id="left" style="">
+		<div class="fix" id="popout" style="">
 			
 			<!--<p>
 				Sell - Buy - Find<br>
@@ -85,58 +85,125 @@
 			</div>
 			
 		</div>
-		<div class="center-2" id="center" style="display:none;">
+		<div id="center">
 		
 			<div class="dfwrap overflow">
 				<div class="df">
 			
-					<div id="detail">
-					
-						<%= $content %>
+					<div id="left">
 
-						<div class="gallery">
+						<div class="gallery" id="detailtop">
 							<div><img src="thumb.jpg" alt="thumb" style="width:100%;"><a href="#" class="fullscreen">FULLSCREEN</a></div>
 							<!-- more div frames -->
 							<ul>
 								<li><a href="#">PREV</a></li><li><a href="#">NEXT</a></li><li><a href="#">PLAY/PAUSE</a></li><li><a href="#">REWIND</a></li>
 							</ul>
 						</div>
-						<h2>This is the media item title</h2>
-						<p>Some details...</p>
+						<div id="detailbottom" style="display:none">
+							<h2>This is the media item title</h2>
+							<p>Some details...</p>
 
-						<ul id="descnav">
-							<li><a href="#comments">COMMENTS</a></li>
-							<li><a href="#more">MORE</a></li>
-							<li><a href="#evenmore" class="emph">EVEN&nbsp;MORE</a></li>
-						</ul>
-						<div id="desc">
-							Here comes the text...
-							<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-							<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-							<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-							<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-							<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-							<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-							<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-							<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+							<ul id="descnav">
+								<li><a href="#comments">COMMENTS</a></li>
+								<li><a href="#more">MORE</a></li>
+								<li><a href="#evenmore" class="emph">EVEN&nbsp;MORE</a></li>
+							</ul>
+							<div id="desc">
+								Here comes the text...
+								<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+								<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+								<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+								<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+								<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+								<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+								<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+								<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+							</div>
+
+							<a name="comments"></a>
+							<h3>COMMENTS</h3>
+							<div class="comment">
+								<h4>This is the first comment</h4>
+								<p>This is a really cool video!</p>
+							</div>
+							<div class="comment">
+								<h4>Second comment</h4>
+								<p>Nicely done.</p>
+							</div>
 						</div>
 
-						<a name="comments"></a>
-						<h3>COMMENTS</h3>
-						<div class="comment">
-							<h4>This is the first comment</h4>
-							<p>This is a really cool video!</p>
-						</div>
-						<div class="comment">
-							<h4>Second comment</h4>
-							<p>Nicely done.</p>
-						</div>
+						<h2>Search results</h2>
+						
+						<div id="results">
 
+						  <div class="dfwrap">
+								<div class="df shortads">
+								
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="#">This is the media title on one line sdsd ggdsdhsdfgsd</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="#">This is the media title on one line dfgsdg</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="#">This is the media title on one line</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="#">This is the media title on one line</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="#">This is the media  on  line</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="#">This is the media title on one line</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="#">This is the media title on one line</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+									<div class="shortad">
+										<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+										<h3><a href="#">This is the media title on one line</a></h3>
+										<p><a href="#">This is the subtitle or sub info</a></p>
+									</div>
+
+									<div class="shortad"></div>
+
+								</div>
+							</div>
+							
+						</div>
+							
 					</div>
 					<div id="right">
-						
-						<h2>Related</h2>
 
+						<h2>Related</h2>
+						
+						<%= $related %>
+		
+						<div class="microad">
+							<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+							<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
+							<p><a href="#">This is the subtitle or sub info</a></p>
+						</div>
 						<div class="microad">
 							<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
 							<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
@@ -158,76 +225,6 @@
 				</div>
 			</div>
 		
-		</div>
-		<div class="center-1" id="center">
-			
-			<h2>Trending</h2>
-			
-			<div class="dfwrap">
-				<div class="df shortads">
-				
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="#">This is the media title on one line sdsd ggdsdhsdfgsd</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="#">This is the media title on one line dfgsdg</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="#">This is the media title on one line</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="#">This is the media title on one line</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="#">This is the media  on  line</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="#">This is the media title on one line</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="#">This is the media title on one line</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-					<div class="shortad">
-						<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-						<h3><a href="#">This is the media title on one line</a></h3>
-						<p><a href="#">This is the subtitle or sub info</a></p>
-					</div>
-
-					<div class="shortad"></div>
-
-				</div>
-			</div>
-
-			<h2>Trending Two</h2>
-			
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-			
 		</div>
   
 		<!--

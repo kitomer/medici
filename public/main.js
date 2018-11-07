@@ -56,18 +56,19 @@ function query( info )
 
 function toggleMenu()
 {
-	if( $('#left').style.display != 'none' ) {
-		$('#left').style.display = 'none';
+	if( $('#popout').style.display != 'none' ) {
+		$('#popout').style.display = 'none';
 		$('#center').style.marginLeft = '0';
 		$('#center').style.paddingLeft = '30pt';
 	}
 	else {
-		$('#left').style.display = 'block';
+		$('#popout').style.display = 'block';
 		$('#center').style.marginLeft = '200pt';
 		$('#center').style.paddingLeft = '20pt';
 	}
 }
 
+/*
 function showCenter( n )
 {
 	$('.center-1').style.display = "none";
@@ -77,3 +78,4 @@ function showCenter( n )
 		case 2: $('.center-2').style.display = "block"; break;
 	}
 }
+*/

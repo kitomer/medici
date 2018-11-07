@@ -12,8 +12,9 @@ sub oui
 	#print Dumper($app->crud( -db => 'main', -table => 'table' ));
   $c->render(
 		'layouts/default',
-		msg => 'Welcome!',
-		content => "hi...",
+		center => 'center...',
+		detail => 'detail...',
+		related => 'related...',
 	);
 }
 
