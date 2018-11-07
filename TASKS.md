@@ -10,6 +10,55 @@ can be found in the tasks directory in dedicated files for ecah task
 
 #### Mockup design work
 
+- medici heute:
+	- ajax/js funcs
+	- controller action dummies, geben dummydaten zurueck
+	- nav etc. verlinken
+	- js-click logic (result, detail etc.)
+
+- the top detail always STAYS AT THE TOP!
+- the crud func returns HASH with various info, same api as AJAX api, s.b.
+- URL/search query handling
+	- query is in URL (path or params) and inside a global JSON object (generated serverside, modified clientside)
+			(same contents as ajax call info, s.b.)
+	- GET will always return a complete page with layout
+		-> url has the same parts as ajax api, e.g. /search/<query>?page=<>&mode=view&edit=...
+				or /?query=...&...
+	- AJAX api
+			POST { “query” => “...”       # OPTIONAL!
+							“mode” => “summary|detail|delete|delete-confirm|edit|save|...” # default mode
+							“summary|detail|delete|delete-confirm|edit|save|...” => [ ids... ],  # optional, default is “view” all in the result set
+							“page” => ... } # page = -1 means all (but internal limit applies!)
+				= perform query OR specified records by id
+				- returns JSON with the IDS of the result list AND HTML for specified mode, e.g.
+						{ “info” => {...},
+							“results” => [
+								{ “id” => ..., “html” => ... }, ...
+							] }
+	- JS func wrapping AJAX api: query(q,{view:[...],...})
+	- nav-links and pagination-links execute JS query()
+	- serverside query will be executed and the generated html integrated in layout
+	- clientside query will for example...
+		- perform the same global query but with increased page and integrate the results into the DOM
+			(e.g. when searching with the top form or clicking a nav link)
+		- load another mode for a single id (e.g. when editing a single id or loading detail)
+		- load related records to a record with this query: { “query” => ":related .uid=...” }
+	- gui parts:
+		- left nav: links go to clientside searches
+		- center: serverside generated + optionally clientside extended
+		- top detail: serverside generated + optionally clientside changes
+		- right related: serverside generated + optionally clientside changes
+
+	- ? when the search CHANGES only clientside, how is the URL updated without reloading the page?
+			1 clientside global JSON is updated
+			2 generate hash for state, append as anchor to url (window.location.hash), send ajax with json info + hash
+				-> the json infos are stored in memcached (hash -> json)
+			3 on page load: if anchor hash present, then send ajax to server asking for json info corresponding to the hash
+				+ replace global json info with received json
+				+ perform search
+				! if no json info could be received, REMOVE the anchor (to avoid confusion!)
+				! if the server generated the whole page, then NO anchor/hash is present (thus no ajax stuff)
+
 - clientside AJAX logic and URLs strategy for searches, top detail and related list
 	... tbd
 

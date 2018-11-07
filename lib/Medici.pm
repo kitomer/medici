@@ -84,7 +84,8 @@ sub startup {
   my $r = $app->routes;
 
   # Normal route to controller
-  $r->get('/')->to('Example#welcome');
+  $r->get('/')->to('LaPage#oui');
+  $r->post('/')->to('LaPage#ouioui');
 	
   $r->any('/login')->to('Auth#login');
 }

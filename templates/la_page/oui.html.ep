@@ -1,0 +1,5 @@
+<h2><%= $msg %></h2>
+<p>
+	Welcome ...
+</p>
+<%= b($content) =>
