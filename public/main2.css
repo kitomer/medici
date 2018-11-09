@@ -487,8 +487,8 @@ a.emph:hover {
 	padding-right: 10pt;
 	padding-bottom: 10pt;
 	min-width: 80pt;
-	max-width: 160pt;
-	flex-grow: 3 !important;
+	max-width: 200pt;
+	flex-grow: 6 !important;
 	flex-basis: auto;
 }
 .shortad:last-child {

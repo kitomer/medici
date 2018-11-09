@@ -17,7 +17,7 @@
 				Private - Small Businesses			
 			</p>-->
 			<ul>
-				<li><a href="#" class="cur icn"><i class="material-icons">home</i> Start</a></li>
+				<li><a href="#" class="cur icn" onclick="query({});"><i class="material-icons">home</i> Start</a></li>
 				<li><a href="#" class="icn"><i class="material-icons">favorite</i> Trending</a></li>
 				<li class="sep"><a href="#" class="icn"><i class="material-icons">grade</i> New</a></li>
 				<li class="sep"><a href="#" class="icn"><i class="material-icons">face</i> Favorites</a></li>
@@ -197,27 +197,29 @@
 
 						<h2>Related</h2>
 						
-						<%= $related %>
-		
-						<div class="microad">
-							<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-							<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
-							<p><a href="#">This is the subtitle or sub info</a></p>
-						</div>
-						<div class="microad">
-							<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-							<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
-							<p><a href="#">This is the subtitle or sub info</a></p>
-						</div>
-						<div class="microad">
-							<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-							<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
-							<p><a href="#">This is the subtitle or sub info</a></p>
-						</div>
-						<div class="microad">
-							<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
-							<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
-							<p><a href="#">This is the subtitle or sub info</a></p>
+						<div id="related">
+							<%= $related %>
+			
+							<div class="microad">
+								<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+								<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
+								<p><a href="#">This is the subtitle or sub info</a></p>
+							</div>
+							<div class="microad">
+								<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+								<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
+								<p><a href="#">This is the subtitle or sub info</a></p>
+							</div>
+							<div class="microad">
+								<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+								<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
+								<p><a href="#">This is the subtitle or sub info</a></p>
+							</div>
+							<div class="microad">
+								<a href="#"><img src="thumb.jpg" alt="thumb"><span>Blabla</span></a>
+								<h3><a href="javascript:void(0);" onclick="toggleMenu();showCenter(2);">This is the media title on one line</a></h3>
+								<p><a href="#">This is the subtitle or sub info</a></p>
+							</div>
 						</div>
 						
 					</div>

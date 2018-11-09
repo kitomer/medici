@@ -26,7 +26,11 @@ sub ouioui
 
 	#print Dumper($app->crud( -db => 'main', -table => 'table' ));
   $c->render(
-		format => 'json',
+		json => {
+			center => 'center...',
+			detail => 'detail...',
+			related => 'IT WORKS - related...',	
+		},
 		#msg => 'Welcome!',
 		#content => $app->crud( -db => 'main', -table => 'table' )
 	);

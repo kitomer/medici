@@ -6,6 +6,14 @@ function $( sel )
 	return document.querySelector( sel );
 }
 
+function stuff( str, id )
+{
+	var elem = document.getElementById(id);
+	if( elem ) {
+			elem.innerHTML = str;
+	}
+}
+
 /*
  *		info: {
  *      "query" => "..."       # OPTIONAL!
@@ -47,10 +55,11 @@ function query( info )
 				var result = JSON.parse(this.responseText);
 				// ...
 				console.log(result);
+				stuff( result.related, 'related' )
 			}
 		};
 	xmlhttp.open('POST', '/');
-	console.log("sending ajax request");
+	//console.log("sending ajax request");
 	xmlhttp.send(postdata);
 }
 

@@ -11,12 +11,12 @@ can be found in the tasks directory in dedicated files for ecah task
 #### Mockup design work
 
 - medici heute:
-	- ajax/js funcs
-	- controller action dummies, geben dummydaten zurueck
+	* ajax/js funcs
 	- nav etc. verlinken
+	- controller action dummies, geben dummydaten zurueck
 	- js-click logic (result, detail etc.)
 
-- the top detail always STAYS AT THE TOP!
+- ?? the top detail always STAYS AT THE TOP!
 - the crud func returns HASH with various info, same api as AJAX api, s.b.
 - URL/search query handling
 	- query is in URL (path or params) and inside a global JSON object (generated serverside, modified clientside)
