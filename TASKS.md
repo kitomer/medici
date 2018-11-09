@@ -10,7 +10,6 @@ can be found in the tasks directory in dedicated files for ecah task
 
 #### Mockup design work
 
-
 - medici heute:
 	- ajax/js funcs
 	- controller action dummies, geben dummydaten zurueck
