@@ -18,9 +18,9 @@
 			</p>-->
 			<ul>
 				<li><a href="#" class="cur icn" onclick="query({});"><i class="material-icons">home</i> Start</a></li>
-				<li><a href="#" class="icn"><i class="material-icons">favorite</i> Trending</a></li>
-				<li class="sep"><a href="#" class="icn"><i class="material-icons">grade</i> New</a></li>
-				<li class="sep"><a href="#" class="icn"><i class="material-icons">face</i> Favorites</a></li>
+				<li><a href="#" class="icn" onclick="query({'query':':trending'});"><i class="material-icons">favorite</i> Trending</a></li>
+				<li class="sep"><a href="#" class="icn" onclick="query({'query':':newest'});"><i class="material-icons">grade</i> New</a></li>
+				<li class="sep"><a href="#" class="icn" onclick="query({'query':':favs'});"><i class="material-icons">face</i> Favorites</a></li>
 				<!--
 				<li class="sep"><a href="#" class="icn icn-room">Near</a>
 					<ul>
@@ -30,7 +30,7 @@
 					</ul>
 				</li>
 				-->
-				<li class="sep"><a href="#" class="icn"><i class="material-icons">assessment</i> Top Categories</a>
+				<li class="sep"><a href="#" class="icn" onclick="query({'query':':topcat'});"><i class="material-icons">assessment</i> Top Categories</a>
 					<ul>
 						<li><a href="#">Events</a></li>
 						<li><a href="#">Vacation</a></li>
@@ -67,7 +67,7 @@
 					</div>
 					<div class="" id="find">
 						
-						<form action="" method="" class="rel">
+						<form action="" method="" class="rel" onsubmit="query({'query':$('#findbox')});return false;">
 							<input type="text" name="" value="bla bla" id="findbox">
 							<input type="submit" value="FIND" id="findbutt" class="abs">
 						</form>
