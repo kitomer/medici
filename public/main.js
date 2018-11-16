@@ -55,7 +55,9 @@ function query( info )
 				var result = JSON.parse(this.responseText);
 				// ...
 				console.log(result);
-				stuff( result.related, 'related' )
+				stuff( result.related, 'related' );
+				
+				window.location.hash = '#'+result.hash;
 			}
 		};
 	xmlhttp.open('POST', '/');

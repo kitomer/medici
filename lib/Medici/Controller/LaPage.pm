@@ -30,6 +30,7 @@ sub ouioui
 			center => 'center...',
 			detail => 'detail...',
 			related => 'IT WORKS - related...',	
+			hash => 'hash-of-plain-search', # takes only the query parts into account that do NOT edit/delete!
 		},
 		#msg => 'Welcome!',
 		#content => $app->crud( -db => 'main', -table => 'table' )
