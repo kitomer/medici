@@ -16,7 +16,13 @@ can be found in the tasks directory in dedicated files for ecah task
 	- controller action dummies, geben dummydaten zurueck
 	- js-click logic (result, detail etc.)
 
+- scrolling behaviour:
+	- when the top detail goes out of view:
+		- it is replaced with a same-size placeholder div
+		- the actual detail is moved to a (now displayed) collapsed as small bar fixed at the top of the result list
+	
 - ?? the top detail always STAYS AT THE TOP!
+
 - the crud func returns HASH with various info, same api as AJAX api, s.b.
 - URL/search query handling
 	- query is in URL (path or params) and inside a global JSON object (generated serverside, modified clientside)
