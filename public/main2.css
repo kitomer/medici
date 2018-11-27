@@ -406,7 +406,16 @@ a.emph:hover {
 		#left > p {
 			margin: 5pt 0;
 		}
-		
+			#detailfix {
+				top: 0;
+				left: 0;
+			}
+				#detailfix > div {
+					background: #fff;
+					padding: 20pt;
+					width: 100%;
+					z-index: 500;
+				}
 		
 			#results {
 				position: absolute;

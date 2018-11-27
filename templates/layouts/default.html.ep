@@ -7,7 +7,7 @@
     <script type="text/javascript" src="main.js"></script>
     <title><%= title %></title>
   </head>
-  <body onload="toggleMenu();">
+  <body onload="initBody();" onscroll="scrollDetail();">
 
 		<div class="fix" id="popout" style="">
 			
@@ -92,6 +92,11 @@
 			
 					<div id="left">
 
+						<div class="rel" id="detailfix" style="display:none">
+							<div class="abs">
+								hello!
+							</div>
+						</div>
 						<div class="gallery" id="detailtop">
 							<div><img src="thumb.jpg" alt="thumb" style="width:100%;"><a href="#" class="fullscreen">FULLSCREEN</a></div>
 							<!-- more div frames -->
@@ -131,7 +136,7 @@
 								<p>Nicely done.</p>
 							</div>
 						</div>
-
+						
 						<h2>Search results</h2>
 						
 						<div id="results">
