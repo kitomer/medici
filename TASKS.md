@@ -20,8 +20,12 @@ can be found in the tasks directory in dedicated files for ecah task
 	- when the top detail goes out of view:
 		- it is replaced with a same-size placeholder div
 		- the actual detail is moved to a (now displayed) collapsed as small bar fixed at the top of the result list
-	
-- ?? the top detail always STAYS AT THE TOP!
+	sobald der Detail nur noch n Pixel sichtbar ist
+	(n = Hoehe des fixen Detailsummaries), so wird das fixe Detail-Summary
+	angezeigt. es wird NICHT permanent neu positioniert. es hat die
+	Breite des Details (oder alt. die Breite des gesamten linken Bereichs).
+	Es hat einen nach unten auslaufenden Schatten, so dass der Content
+	sichtbar “darunter” wegscrollt.	
 
 - the crud func returns HASH with various info, same api as AJAX api, s.b.
 - URL/search query handling
